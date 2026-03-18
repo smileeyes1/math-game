@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مغامرة الأرنب السريع ×١ و ×٢ 🐰🥕</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom, #fffde7, #fff9c4);
+      color: #333;
+      margin: 0;
+      padding: ٢٠px;
+      text-align: center;
+    }
+    h1 { color: #e65100; font-size: ٢٫٢em; }
+    .bunny { font-size: ٣em; }
+    .container {
+      max-width: ٦٥٠px;
+      margin: auto;
+      background: white;
+      padding: ٢٠px;
+      border-radius: ٢٠px;
+      box-shadow: ٠ ١٠px ٢٥px rgba(٠,٠,٠,٠٫١);
+    }
+    .question {
+      font-size: ١٫٦em;
+      margin: ٢٠px ٠;
+      padding: ١٥px;
+      background: #fff8e1;
+      border-radius: ١٥px;
+      border: ٣px dashed #ffb74d;
+    }
+    input {
+      font-size: ١٫٥em;
+      width: ١٢٠px;
+      text-align: center;
+      padding: ٨px;
+      border: ٣px solid #ffb74d;
+      border-radius: ١٢px;
+    }
+    button {
+      font-size: ١٫٣em;
+      padding: ١٠px ٢٥px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      border-radius: ١٢px;
+      cursor: pointer;
+      margin: ٨px;
+    }
+    #result { font-size: ١٫٦em; min-height: ٤٠px; }
+    footer {
+      margin-top: ٢٠px;
+      font-size: ١em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="bunny">🐰</div>
+  <h1>مغامرة الأرنب السريع</h1>
+  <p>ساعد الأرنب في جمع الجزر (جدول ×١ و ×٢)</p>
+
+  <div class="question" id="question">اضغط سؤال جديد</div>
+
+  <input id="answer" placeholder="الإجابة" />
+  <br>
+  <button onclick="checkAnswer()">تحقّق 🥕</button>
+  <button onclick="newQuestion()">سؤال جديد 🔄</button>
+
+  <div id="result"></div>
+  <div>النقاط: <span id="score">٠</span></div>
+
+  <footer>
+    <div>إعداد المعلم: <strong>محمد وجيه</strong></div>
+    <div>مدرسة عاطوف المختلطة</div>
+  </footer>
+</div>
+
+<!-- أصوات تشجيعية -->
+<audio id="sound-correct">
+  <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=" type="audio/wav">
+</audio>
+<audio id="sound-wrong">
+  <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=" type="audio/wav">
+</audio>
+
+<script>
+  function toArabic(num) {
+    return num.toString().replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+  }
+
+  let a = 1;
+  let b = 1;
+  let score = 0;
+
+  function newQuestion() {
+    a = Math.random() < 0.5 ? 1 : 2;
+    b = Math.floor(Math.random() * 10) + 1;
+    document.getElementById('question').innerText = `${toArabic(a)} × ${toArabic(b)} = ؟`;
+    document.getElementById('answer').value = '';
+    document.getElementById('result').innerText = '';
+  }
+
+  function checkAnswer() {
+    const userText = document.getElementById('answer').value.trim();
+    const correct = a * b;
+
+    if (userText === '') {
+      document.getElementById('result').innerText = 'اكتب الإجابة أولًا 😊';
+      return;
+    }
+
+    if (userText === toArabic(correct)) {
+      score++;
+      document.getElementById('result').innerText = `✅ أحسنت! الناتج ${toArabic(correct)}`;
+      document.getElementById('score').innerText = toArabic(score);
+      document.getElementById('sound-correct').play();
+    } else {
+      document.getElementById('result').innerText = `❌ الإجابة الصحيحة هي ${toArabic(correct)}`;
+      document.getElementById('sound-wrong').play();
+    }
+  }
+
+  newQuestion();
+</script>
+</body>
+</html>
