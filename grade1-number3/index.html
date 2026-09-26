@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fffaf4">
+<title>مغامرة العدد ٣ — محسوس، شبه محسوس، مجرد</title>
+<style>
+:root{
+  --bg:#fffaf4;--card:#fff;--text:#18324a;--muted:#687887;--line:#d9e0e6;
+  --accent:#6b46c1;--accent-soft:#eee7ff;--good:#187c45;--good-soft:#e9f7ef;
+  --bad:#b13c3c;--bad-soft:#fff0f0;--gold:#f0ad00;--blue:#2f6db3;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,"Noto Sans Arabic",sans-serif}
+body{direction:rtl;text-align:right}
+button{font:inherit}
+.app{max-width:780px;margin:auto;padding:12px}
+.header{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.progress{height:12px;flex:1;min-width:150px;border:1px solid var(--line);background:#f3f5f7;border-radius:999px;overflow:hidden}
+.progress span{display:block;height:100%;width:0;background:var(--accent);transition:width .25s ease}
+.pill{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 10px;font-weight:800;white-space:nowrap}
+.phase-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.phase-chip{border:1px solid var(--line);border-radius:12px;padding:8px 6px;text-align:center;font-weight:800;font-size:14px;background:#fff;color:var(--muted)}
+.phase-chip.active{border-color:var(--accent);background:var(--accent-soft);color:var(--text)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px}
+.kicker{font-size:14px;color:var(--muted);margin:0 0 4px}
+h1{font-size:25px;line-height:1.4;margin:0 0 7px}
+.instruction{font-size:20px;line-height:1.75;font-weight:850;margin:0 0 14px}
+.teacher-note{font-size:13px;color:var(--muted);border-right:4px solid var(--line);padding:7px 10px;margin:0 0 12px;background:#fafbfc;border-radius:10px}
+.stage{min-height:170px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.grid5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.btn,.obj,.word,.pick,.action,.audio{
+  border:2px solid var(--line);background:#fff;color:var(--text);border-radius:16px;min-height:58px;padding:10px;
+  cursor:pointer;font-weight:850;touch-action:manipulation
+}
+.btn{font-size:43px;text-align:center}
+.obj{font-size:30px;text-align:center;min-height:94px;line-height:1.45}
+.word{font-size:20px}
+.pick{font-size:35px;text-align:center;min-height:76px}
+.pick[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.btn:focus-visible,.obj:focus-visible,.word:focus-visible,.pick:focus-visible,.action:focus-visible,.audio:focus-visible{
+  outline:3px solid var(--accent);outline-offset:2px
+}
+.correct{border-color:var(--good)!important;background:var(--good-soft)!important}
+.wrong{border-color:var(--bad)!important;background:var(--bad-soft)!important}
+.feedback{min-height:35px;margin-top:12px;font-size:18px;font-weight:850;line-height:1.6}
+.feedback.good{color:var(--good)}.feedback.try{color:var(--bad)}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.action,.audio{font-size:17px;min-width:120px}
+.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.hero{font-size:126px;line-height:1;text-align:center;font-weight:900;margin:4px 0 14px}
+.demo{text-align:center;font-size:48px;line-height:1.5;margin:7px 0 14px;word-spacing:10px}
+.counter{text-align:center;font-size:18px;font-weight:850;color:var(--muted);margin:9px 0 12px}
+.basket-wrap{display:grid;grid-template-columns:1fr;gap:12px}
+.pool{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:10px;border:1px dashed var(--line);border-radius:16px;background:#fcfdfe}
+.basket{min-height:115px;border:3px solid #c9a56a;border-top-width:8px;border-radius:12px 12px 28px 28px;padding:12px;display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;background:#fffaf0}
+.basket-label{text-align:center;font-weight:900;margin-bottom:5px}
+.real-task{border:2px solid var(--accent);background:var(--accent-soft);border-radius:18px;padding:14px;text-align:center}
+.real-task .big{font-size:30px;font-weight:900;margin-bottom:8px}
+.real-task .examples{font-size:38px;letter-spacing:6px;margin:10px 0}
+.bridge{border:1px solid var(--line);background:#fbfcfd;border-radius:16px;padding:13px;text-align:center;line-height:1.8}
+.bridge strong{font-size:22px}
+.frame{display:grid;grid-template-columns:repeat(5,48px);gap:6px;justify-content:center;direction:ltr;margin:8px auto 14px}
+.cell{width:48px;height:48px;border:2px solid var(--line);border-radius:10px;display:grid;place-items:center;background:#fff}
+.dot{width:28px;height:28px;border-radius:50%;background:var(--accent)}
+.match{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin:8px 0 14px}
+.bigcard{min-width:125px;min-height:108px;border:2px solid var(--line);border-radius:18px;background:#fff;display:grid;place-items:center;font-size:60px;font-weight:900}
+.support{border:2px solid var(--blue);background:#eef6ff;border-radius:16px;padding:12px;margin:10px 0;text-align:center}
+.support .dots{font-size:40px;word-spacing:8px}
+.trace{position:relative;max-width:520px;height:250px;margin:8px auto;border:2px dashed var(--line);border-radius:18px;overflow:hidden;background:#fff;touch-action:none}
+.trace-guide{position:absolute;inset:0;display:grid;place-items:center;font-size:205px;font-weight:900;color:#d5dbe1;user-select:none}
+.trace canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.note{text-align:center;color:var(--muted);font-size:15px}
+.summary{display:grid;gap:8px;margin:13px 0}
+.skill{border:1px solid var(--line);border-radius:13px;padding:10px;background:#fbfcfd;font-weight:800}
+.center{text-align:center}.stars{font-size:34px;letter-spacing:3px}.result-title{font-size:28px;font-weight:900;margin:8px 0}
+@media(max-width:430px){
+ .app{padding:9px}.panel{padding:13px}h1{font-size:22px}.instruction{font-size:18px}
+ .btn{font-size:37px}.obj{font-size:25px}.hero{font-size:108px}.grid5{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .frame{grid-template-columns:repeat(5,42px);gap:5px}.cell{width:42px;height:42px}.dot{width:24px;height:24px}
+ .trace{height:220px}.trace-guide{font-size:178px}.phase-chip{font-size:12px;padding:7px 3px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="app" id="game">
+  <div class="header">
+    <div class="progress" aria-label="تقدّم اللعبة"><span id="progressFill"></span></div>
+    <div class="pill" id="missionBadge">جاهز</div>
+    <div class="pill" id="starBadge">⭐ ٠</div>
+  </div>
+  <div class="phase-strip" aria-label="مراحل التعلم">
+    <div class="phase-chip" id="pConcrete">١. أتعلم بالأشياء</div>
+    <div class="phase-chip" id="pPictorial">٢. أتعلم بالصور</div>
+    <div class="phase-chip" id="pAbstract">٣. أتعلم بالرمز</div>
+  </div>
+  <section class="panel">
+    <p class="kicker">رياضيات الصف الأول • العدد ٣</p>
+    <h1 id="title">مغامرة العدد ٣</h1>
+    <p class="instruction" id="instruction">سنبدأ بالأشياء، ثم الصور، ثم الرمز ٣.</p>
+    <p class="teacher-note" id="teacherNote">التدرج: محسوس ← شبه محسوس ← مجرد.</p>
+    <div class="stage" id="stage"></div>
+    <div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+    <div class="actions">
+      <button type="button" class="audio" id="speakBtn">🔊 اسمع التعليمات</button>
+      <button type="button" class="action" id="restartBtn">↻ ابدأ من جديد</button>
+    </div>
+  </section>
+</main>
+<script>
+(function(){
+"use strict";
+const EAST="٠١٢٣٤٥٦٧٨٩";
+const ar=n=>String(n).replace(/[0-9]/g,d=>EAST[Number(d)]);
+const shuffled=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const stage=document.getElementById("stage"),title=document.getElementById("title"),instruction=document.getElementById("instruction"),
+feedback=document.getElementById("feedback"),fill=document.getElementById("progressFill"),mission=document.getElementById("missionBadge"),
+starBadge=document.getElementById("starBadge"),teacherNote=document.getElementById("teacherNote");
+const phaseEls=[document.getElementById("pConcrete"),document.getElementById("pPictorial"),document.getElementById("pAbstract")];
+let step=-1,stars=0,selected=new Set(),finalIndex=0,locked=false,attempts=0,mistakes=0;
+const TOTAL=10;
+function phaseForStep(s){if(s<=2)return 0;if(s<=5)return 1;return 2}
+function updateHeader(){
+ const d=Math.max(0,step);fill.style.width=Math.min(100,(d/TOTAL)*100)+"%";
+ mission.textContent=step<0?"جاهز":step>=TOTAL?"اكتملت المغامرة":"المهمة "+ar(step+1)+" من "+ar(TOTAL);
+ starBadge.textContent="⭐ "+ar(stars);
+ phaseEls.forEach((e,i)=>e.classList.toggle("active",step>=0 && phaseForStep(step)===i));
+}
+function mk(text,cls){const b=document.createElement("button");b.type="button";b.className=cls;b.textContent=text;return b}
+function setHead(t,i,n){title.textContent=t;instruction.textContent=i;teacherNote.textContent=n||""}
+function clearFeed(){feedback.textContent="";feedback.className="feedback"}
+function good(t){feedback.textContent=t;feedback.className="feedback good";tone(true)}
+function bad(t){feedback.textContent=t;feedback.className="feedback try";mistakes++;tone(false)}
+function tone(ok){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=ok?650:220;g.gain.setValueAtTime(.0001,c.currentTime);g.gain.exponentialRampToValueAtTime(.055,c.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+.16);o.start();o.stop(c.currentTime+.17);setTimeout(()=>c.close(),230)}catch(e){}}
+function speak(t){if(!("speechSynthesis" in window)){bad("القراءة الصوتية غير متاحة على هذا الجهاز.");return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="ar";u.rate=.78;speechSynthesis.speak(u)}
+function finish(msg){if(locked)return;locked=true;stars++;updateHeader();good(msg);setTimeout(()=>{step++;attempts=0;locked=false;clearFeed();render()},650)}
+function wrong(btn,msg){if(btn)btn.classList.add("wrong");attempts++;bad(msg);if(btn)setTimeout(()=>btn.classList.remove("wrong"),420)}
+function render(){stage.innerHTML="";selected=new Set();updateHeader();if(step<0)return intro();if(step===0)return realObjects();if(step===1)return virtualManipulation();if(step===2)return oneToOne();if(step===3)return pictureQuantity();if(step===4)return dotFrame();if(step===5)return pictorialMatch();if(step===6)return bridgeToSymbol();if(step===7)return recognizeSymbol();if(step===8)return nameAndTrace();if(step===9)return finalAssessment();return complete()}
+function intro(){
+ setHead("مغامرة العدد ٣","سنبدأ بأشياء حقيقية، ثم نرى الصور، وبعدها نتعلم الرمز ٣.","الهدف: بناء معنى العدد قبل تقديم رمزه.");
+ const box=document.createElement("div");box.className="bridge";box.innerHTML="<strong>أشياء ← صور ← ٣</strong><br>كل مرحلة تساعدك على فهم المرحلة التي بعدها.";
+ const b=mk("ابدأ","action primary");b.addEventListener("click",()=>{step=0;render()});stage.append(box,b)
+}
+function realObjects(){
+ setHead("١. أتعلم بثلاثة أشياء حقيقية","أحضر ٣ أشياء صغيرة من حولك، مثل أقلام أو أغطية، وضعها أمامك. المس كل شيء مرة واحدة وأنت تعد: واحد، اثنان، ثلاثة.","محسوس حقيقي: الطفل يتعامل مع أشياء واقعية قبل أي رمز.");
+ const box=document.createElement("div");box.className="real-task";
+ box.innerHTML='<div class="big">حضّر ٣ أشياء حقيقية</div><div class="examples">✏️ ✏️ ✏️</div><div>المسها واحدةً واحدة وقل: واحد، اثنان، ثلاثة.</div>';
+ const b=mk("حضّرت ٣ أشياء وعددتها","action primary");b.addEventListener("click",()=>finish("ممتاز! الآن أصبحت «ثلاثة» كميةً تراها وتلمسها."));
+ stage.append(box,b)
+}
+function virtualManipulation(){
+ setHead("٢. أجمع ثلاثة أشياء","ضع ٣ كرات داخل السلة. اضغط على الكرة لنقلها إلى السلة، واضغط عليها داخل السلة لإعادتها.","محسوس رقمي: مناولة وتمثيل الفعل باللمس مع تثبيت الكمية.");
+ const wrap=document.createElement("div");wrap.className="basket-wrap";
+ const pool=document.createElement("div");pool.className="pool";const basketLabel=document.createElement("div");basketLabel.className="basket-label";basketLabel.textContent="السلة";
+ const basket=document.createElement("div");basket.className="basket";const count=document.createElement("div");count.className="counter";count.textContent="في السلة: ٠";
+ let inBasket=new Set();
+ function refresh(){pool.innerHTML="";basket.innerHTML="";for(let i=0;i<5;i++){const b=mk("⚽","pick");b.setAttribute("aria-label","كرة");if(inBasket.has(i)){b.addEventListener("click",()=>{inBasket.delete(i);refresh()});basket.appendChild(b)}else{b.addEventListener("click",()=>{inBasket.add(i);refresh()});pool.appendChild(b)}}count.textContent="في السلة: "+ar(inBasket.size)}
+ refresh();
+ const check=mk("تحقّق","action primary");check.addEventListener("click",()=>{if(inBasket.size===3)finish("رائع! وضعتَ ٣ كرات في السلة.");else wrong(null,"اجعل في السلة ٣ كرات بالضبط.")});
+ wrap.append(pool,basketLabel,basket,count,check);stage.appendChild(wrap)
+}
+function oneToOne(){
+ setHead("٣. واحد لكل واحد","أعطِ كلَّ أرنبٍ جزرةً واحدة. اختر ٣ جزر فقط.","محسوس/تمثيلي: المطابقة واحدًا لواحد تمنع العد الآلي غير المفهوم.");
+ const rabbits=document.createElement("div");rabbits.className="demo";rabbits.textContent="🐰 🐰 🐰";
+ const grid=document.createElement("div");grid.className="grid5";const count=document.createElement("div");count.className="counter";count.textContent="اخترت ٠ جزر.";
+ for(let i=0;i<5;i++){const b=mk("🥕","pick");b.setAttribute("aria-pressed","false");b.addEventListener("click",()=>{if(selected.has(i)){selected.delete(i);b.setAttribute("aria-pressed","false")}else{selected.add(i);b.setAttribute("aria-pressed","true")}count.textContent="اخترت "+ar(selected.size)+" جزر."});grid.appendChild(b)}
+ const check=mk("أعطيت كل أرنب جزرة","action primary");check.addEventListener("click",()=>{if(selected.size===3)finish("أحسنت! ٣ أرانب تحتاج ٣ جزر، واحدة لكل أرنب.");else wrong(null,"لديك ٣ أرانب. اختر جزرةً واحدة لكل أرنب.")});
+ stage.append(rabbits,grid,count,check)
+}
+function pictureQuantity(){
+ setHead("٤. أتعلم بالصور","أيُّ صورة تُظهر ٣ تفاحات؟","شبه محسوس: الطفل ينتقل من الأشياء إلى صور تمثل الكمية نفسها.");
+ const grid=document.createElement("div");grid.className="grid3";
+ shuffled([{t:"🍎 🍎",ok:false},{t:"🍎 🍎 🍎",ok:true},{t:"🍎 🍎 🍎 🍎",ok:false}]).forEach(x=>{const b=mk(x.t,"obj");b.addEventListener("click",()=>x.ok?(b.classList.add("correct"),finish("صحيح! هذه صورة لثلاث تفاحات.")):wrong(b,"عُدَّ التفاحات واحدةً واحدة.") );grid.appendChild(b)});
+ stage.appendChild(grid)
+}
+function dotFrame(){
+ setHead("٥. أرى ثلاثة كنقاط","اختر الإطار الذي يحتوي ٣ نقاط.","شبه محسوس منظم: النقاط تقلل أثر شكل الأشياء وتُبقي التركيز على العدد.");
+ const grid=document.createElement("div");grid.className="grid3";
+ shuffled([2,3,4]).forEach(n=>{const b=mk("","obj");const mini=document.createElement("div");mini.style.display="grid";mini.style.gridTemplateColumns="repeat(2,20px)";mini.style.gap="5px";mini.style.justifyContent="center";mini.style.direction="ltr";for(let i=0;i<4;i++){const c=document.createElement("span");c.style.cssText="width:20px;height:20px;border:1px solid #bcc6cf;border-radius:5px;display:grid;place-items:center";if(i<n){const d=document.createElement("span");d.style.cssText="width:12px;height:12px;border-radius:50%;background:var(--accent)";c.appendChild(d)}mini.appendChild(c)}b.appendChild(mini);b.addEventListener("click",()=>n===3?(b.classList.add("correct"),finish("ممتاز! ٣ نقاط تمثل كمية ثلاثة.")):wrong(b,"عُدَّ النقاط. نريد ٣ فقط."));grid.appendChild(b)});
+ stage.appendChild(grid)
+}
+function pictorialMatch(){
+ setHead("٦. أعرف أن الشكل يتغير والعدد يبقى","اختر كلَّ صورة فيها ٣ أشياء، ثم اضغط «تحقّق».","شبه محسوس: تعميم مفهوم الثلاثة عبر أشكال مختلفة.");
+ const items=["🌟 🌟 🌟","🚗 🚗","🐟 🐟 🐟","🍌 🍌 🍌 🍌"];
+ const grid=document.createElement("div");grid.className="grid3";
+ items.forEach((v,i)=>{const b=mk(v,"obj");b.setAttribute("aria-pressed","false");b.addEventListener("click",()=>{if(selected.has(i)){selected.delete(i);b.setAttribute("aria-pressed","false")}else{selected.add(i);b.setAttribute("aria-pressed","true")}});grid.appendChild(b)});
+ const check=mk("تحقّق","action primary");check.addEventListener("click",()=>{const ok=selected.size===2&&selected.has(0)&&selected.has(2);if(ok)finish("رائع! النجوم والأسماك مختلفة، لكن في كل مجموعة ٣ أشياء.");else wrong(null,"اختر المجموعات التي تحتوي ٣ أشياء فقط.")});
+ stage.append(grid,check)
+}
+function bridgeToSymbol(){
+ setHead("٧. من الكمية إلى الرمز","انظر: هذه ثلاث نقاط، وهذا الرمز الذي نكتبه ليمثلها.","جسر الانتقال إلى المجرد: نربط الكمية بالرمز قبل طلب تمييزه.");
+ const box=document.createElement("div");box.className="bridge";
+ box.innerHTML='<div class="demo">● ● ●</div><div style="font-size:22px;font-weight:900">ثلاثة أشياء</div><div class="hero">٣</div><div>الرمز <strong>٣</strong> يعني ثلاثة.</div>';
+ const b=mk("فهمت","action primary");b.addEventListener("click",()=>finish("أحسنت! الآن سنستخدم الرمز ٣."));
+ stage.append(box,b)
+}
+function supportCard(){
+ const s=document.createElement("div");s.className="support";s.innerHTML='<div>تذكّر:</div><div class="dots">● ● ●</div><div>هذه الكمية يمثلها الرمز <strong>٣</strong>.</div>';return s
+}
+function recognizeSymbol(){
+ setHead("٨. أتعرف إلى الرمز ٣","اضغط على الرمز الذي يعني ثلاثة.","مجرد: بعد تثبيت الكمية بصريًا، نطلب تمييز الرمز.");
+ if(attempts>=2)stage.appendChild(supportCard());
+ const grid=document.createElement("div");grid.className="grid3";
+ shuffled(["١","٢","٣"]).forEach(v=>{const b=mk(v,"btn");b.addEventListener("click",()=>{if(v==="٣"){b.classList.add("correct");finish("صحيح! الرمز الذي يعني ثلاثة هو ٣.")}else wrong(b,attempts>=1?"انظر إلى المساعدة ثم جرّب مرة أخرى.":"فكّر: أي رمز تعلمناه لثلاثة؟");});grid.appendChild(b)});
+ stage.appendChild(grid)
+}
+function nameAndTrace(){
+ setHead("٩. أقول «ثلاثة» وأتتبّع ٣","اختر اسم العدد أولًا، ثم تتبّع الرمز ٣ بإصبعك.","مجرد: ربط الرمز باسمه اللفظي، ثم تدريب حركي على شكله.");
+ const hero=document.createElement("div");hero.className="hero";hero.textContent="٣";const grid=document.createElement("div");grid.className="grid3";
+ let nameOk=false, traceOk=false;
+ function maybe(){if(nameOk&&traceOk)finish("ممتاز! ربطتَ الرمز ٣ باسمه «ثلاثة» وتدرّبت على كتابته.")}
+ shuffled(["واحد","اثنان","ثلاثة"]).forEach(v=>{const b=mk(v,"word");b.addEventListener("click",()=>{if(v==="ثلاثة"){nameOk=true;b.classList.add("correct");good("صحيح: ثلاثة. الآن تتبّع الرمز ٣.")}else wrong(b,"استمع إلى الاسم: ثلاثة.")});grid.appendChild(b)});
+ const box=document.createElement("div");box.className="trace";const guide=document.createElement("div");guide.className="trace-guide";guide.textContent="٣";const canvas=document.createElement("canvas");canvas.width=700;canvas.height=330;box.append(guide,canvas);
+ const controls=document.createElement("div");controls.className="actions";const clear=mk("امسح","action"),done=mk("أنهيت التتبّع","action primary");controls.append(clear,done);
+ stage.append(hero,grid,box,controls);
+ const ctx=canvas.getContext("2d");ctx.lineCap="round";ctx.lineJoin="round";ctx.lineWidth=18;ctx.strokeStyle="#6b46c1";let draw=false,last=null,len=0;
+ const pos=e=>{const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height}};
+ canvas.addEventListener("pointerdown",e=>{draw=true;last=pos(e);canvas.setPointerCapture(e.pointerId)});
+ canvas.addEventListener("pointermove",e=>{if(!draw)return;const p=pos(e);ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();len+=Math.hypot(p.x-last.x,p.y-last.y);last=p});
+ const stop=()=>{draw=false;last=null};canvas.addEventListener("pointerup",stop);canvas.addEventListener("pointercancel",stop);
+ clear.addEventListener("click",()=>{ctx.clearRect(0,0,canvas.width,canvas.height);len=0;traceOk=false});
+ done.addEventListener("click",()=>{if(len>330){traceOk=true;good("جيد! أكملتَ التتبّع.");maybe()}else bad("تتبّع معظم شكل ٣ أولًا.")})
+}
+const finals=[
+ {q:"كم شيئًا ترى؟",show:"🍊 🍊 🍊",opts:["٢","٣","٤"],a:"٣",cls:"btn"},
+ {q:"أيُّ صورة تمثل ٣؟",show:"",opts:["● ●","● ● ●","● ● ● ●"],a:"● ● ●",cls:"obj"},
+ {q:"ما اسم الرمز ٣؟",show:"٣",opts:["اثنان","ثلاثة","أربعة"],a:"ثلاثة",cls:"word"},
+ {q:"اختر الرمز الذي يطابق هذه الكمية.",show:"★ ★ ★",opts:["١","٣","٢"],a:"٣",cls:"btn"}
+];
+function finalAssessment(){
+ const q=finals[finalIndex];setHead("١٠. أتحقق من فهمي",q.q,"تقويم ختامي يمزج التمثيلات دون إعطاء الحل مسبقًا.");
+ if(q.show){const d=document.createElement("div");d.className=q.show==="٣"?"hero":"demo";d.textContent=q.show;stage.appendChild(d)}
+ if(attempts>=2 && q.a==="٣")stage.appendChild(supportCard());
+ const grid=document.createElement("div");grid.className="grid3";
+ shuffled(q.opts).forEach(v=>{const b=mk(v,q.cls);b.addEventListener("click",()=>{if(v===q.a){b.classList.add("correct");good("إجابة صحيحة.");setTimeout(()=>{finalIndex++;attempts=0;clearFeed();if(finalIndex>=finals.length)finish("أكملتَ التقويم بنجاح.");else finalAssessment()},500)}else wrong(b,"جرّب مرة أخرى. استخدم العد أو التمثيل الذي يساعدك.")});grid.appendChild(b)});
+ stage.appendChild(grid)
+}
+function complete(){
+ fill.style.width="100%";mission.textContent="اكتملت المغامرة";phaseEls.forEach(e=>e.classList.remove("active"));phaseEls[2].classList.add("active");
+ setHead("أحسنت! أصبحتَ تفهم العدد ٣","انتقلتَ من الأشياء الحقيقية إلى الصور، ثم إلى الرمز ٣.","تحقق التسلسل: محسوس ← شبه محسوس ← مجرد.");
+ const box=document.createElement("div");box.className="center";
+ const starsEl=document.createElement("div");starsEl.className="stars";starsEl.textContent="⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐";
+ const rt=document.createElement("div");rt.className="result-title";rt.textContent="ممتاز!";
+ const sum=document.createElement("div");sum.className="summary";
+ ["كوّنتَ كمية من ٣ أشياء.","استخدمتَ المطابقة واحدًا لواحد.","تعرفتَ إلى ٣ في الصور والنقاط.","عمّمتَ مفهوم ثلاثة على أشكال مختلفة.","ربطتَ الكمية بالرمز ٣.","عرفتَ الاسم «ثلاثة» وتتبعتَ كتابة ٣."].forEach(t=>{const x=document.createElement("div");x.className="skill";x.textContent="✓ "+t;sum.appendChild(x)});
+ const msg=document.createElement("p");msg.textContent=mistakes===0?"أكملتَ جميع المهمات من المحاولة الأولى.":"تعلمتَ بالمحاولة والتصحيح حتى وصلتَ إلى الفهم.";
+ const again=mk("ألعب مرة أخرى","action primary");again.addEventListener("click",reset);box.append(starsEl,rt,sum,msg,again);stage.appendChild(box);clearFeed()
+}
+function reset(){step=-1;stars=0;selected=new Set();finalIndex=0;locked=false;attempts=0;mistakes=0;clearFeed();render()}
+document.getElementById("speakBtn").addEventListener("click",()=>speak(instruction.textContent));
+document.getElementById("restartBtn").addEventListener("click",reset);
+render();
+})();
+</script>
+</body>
+</html>
