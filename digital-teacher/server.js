@@ -264,10 +264,10 @@ app.get("/api/teacher/me", teacherAuth, (req, res) => {
 app.get("/api/teacher/sessions", teacherAuth, async (req, res) => {
   const q = await pool.query(\`
     SELECT s.id,s.alias,s.lesson_id,s.status,s.current_stage,s.progress,s.mastery,s.created_at,s.updated_at,s.completed_at,
-      COUNT(e.id)::int AS event_count,
-      COUNT(e.id) FILTER (WHERE e.correct=false)::int AS error_count,
-      COUNT(ev.id)::int AS evidence_count,
-      COUNT(ev.id) FILTER (WHERE ev.review_status='pending')::int AS pending_evidence
+      COUNT(DISTINCT e.id)::int AS event_count,
+      COUNT(DISTINCT e.id) FILTER (WHERE e.correct=false)::int AS error_count,
+      COUNT(DISTINCT ev.id)::int AS evidence_count,
+      COUNT(DISTINCT ev.id) FILTER (WHERE ev.review_status='pending')::int AS pending_evidence
     FROM learner_sessions s
     LEFT JOIN learner_events e ON e.session_id=s.id
     LEFT JOIN learner_evidence ev ON ev.session_id=s.id
