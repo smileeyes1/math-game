@@ -1,0 +1,41 @@
+name: فحص المعلم الرقمي
+
+on:
+  push:
+    branches:
+      - feature/digital-teacher-core-v1
+    paths:
+      - 'digital-teacher/**'
+      - '.github/workflows/digital-teacher.yml'
+  pull_request:
+    paths:
+      - 'digital-teacher/**'
+      - '.github/workflows/digital-teacher.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: جلب المشروع
+        uses: actions/checkout@v4
+      - name: إعداد Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: تثبيت الحزم
+        working-directory: digital-teacher
+        run: npm install --ignore-scripts
+      - name: فحص الخادم
+        working-directory: digital-teacher
+        run: npm run check
+      - name: فحص واجهتي الطالب والمعلم
+        working-directory: digital-teacher
+        run: node tests/check-html.js
+      - name: التحقق من الملفات الأساسية
+        run: |
+          test -f digital-teacher/public/index.html
+          test -f digital-teacher/public/teacher.html
+          grep -q "محمد غنام" digital-teacher/public/index.html
+          grep -q "/api/evidence" digital-teacher/public/index.html
+          grep -q "/api/teacher/sessions" digital-teacher/public/teacher.html
