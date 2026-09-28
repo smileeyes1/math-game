@@ -106,7 +106,7 @@ function notifyTeacher(event, data = {}) {
 
 async function initDb() {
   await pool.query("CREATE EXTENSION IF NOT EXISTS pgcrypto");
-  await pool.query(\`
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS learner_sessions (
       id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
       alias varchar(40) NOT NULL,
@@ -119,8 +119,8 @@ async function initDb() {
       updated_at timestamptz NOT NULL DEFAULT now(),
       completed_at timestamptz
     )
-  \`);
-  await pool.query(\`
+  `);
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS learner_events (
       id bigserial PRIMARY KEY,
       session_id uuid NOT NULL REFERENCES learner_sessions(id) ON DELETE CASCADE,
@@ -133,8 +133,8 @@ async function initDb() {
       payload jsonb NOT NULL DEFAULT '{}'::jsonb,
       created_at timestamptz NOT NULL DEFAULT now()
     )
-  \`);
-  await pool.query(\`
+  `);
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS learner_evidence (
       id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
       session_id uuid NOT NULL REFERENCES learner_sessions(id) ON DELETE CASCADE,
@@ -149,7 +149,7 @@ async function initDb() {
       created_at timestamptz NOT NULL DEFAULT now(),
       reviewed_at timestamptz
     )
-  \`);
+  `);
   await pool.query("CREATE INDEX IF NOT EXISTS idx_events_session_created ON learner_events(session_id, created_at)");
   await pool.query("CREATE INDEX IF NOT EXISTS idx_sessions_updated ON learner_sessions(updated_at DESC)");
   await pool.query("CREATE INDEX IF NOT EXISTS idx_evidence_session ON learner_evidence(session_id, created_at)");
@@ -199,14 +199,14 @@ app.post("/api/events", async (req, res) => {
     [sessionId, lessonId, stage, eventType, correct, attempts, responseMs, JSON.stringify(payload)]
   );
   await pool.query(
-    \`UPDATE learner_sessions SET
+    `UPDATE learner_sessions SET
       current_stage=COALESCE($2,current_stage),
       progress=COALESCE($3,progress),
       mastery=COALESCE($4::jsonb,mastery),
       status=$5,
       completed_at=CASE WHEN $5='completed' THEN COALESCE(completed_at,now()) ELSE completed_at END,
       updated_at=now()
-     WHERE id=$1\`,
+     WHERE id=$1`,
     [sessionId, stage, progress, mastery ? JSON.stringify(mastery) : null, status]
   );
   notifyTeacher("event", { sessionId, stage, eventType, correct, progress });
@@ -262,7 +262,7 @@ app.get("/api/teacher/me", teacherAuth, (req, res) => {
 });
 
 app.get("/api/teacher/sessions", teacherAuth, async (req, res) => {
-  const q = await pool.query(\`
+  const q = await pool.query(`
     SELECT s.id,s.alias,s.lesson_id,s.status,s.current_stage,s.progress,s.mastery,s.created_at,s.updated_at,s.completed_at,
       COUNT(DISTINCT e.id)::int AS event_count,
       COUNT(DISTINCT e.id) FILTER (WHERE e.correct=false)::int AS error_count,
@@ -274,7 +274,7 @@ app.get("/api/teacher/sessions", teacherAuth, async (req, res) => {
     GROUP BY s.id
     ORDER BY s.updated_at DESC
     LIMIT 250
-  \`);
+  `);
   res.json({ ok: true, sessions: q.rows });
 });
 
