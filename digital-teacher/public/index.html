@@ -338,7 +338,7 @@ function doneStage(){
   head("أحسنت يا بطل!","أنهيت درس العدد ٤.");
   bar.style.width="100%";
   const d=document.createElement("div");d.className="done";d.innerHTML='<div class="bigicon">🎉 🏆 🎉</div><div class="hero" style="font-size:110px">٤</div><div>أستطيع أن أعدّ ٤ أشياء.<br>أتعرف إلى الرمز ٤.<br>أعرف كلمة «أربعة».<br>وتدرّبت على كتابة ٤.</div><div class="small" style="margin-top:14px">إعداد: محمد غنام</div>';
-  stageEl.appendChild(d);event("lesson_complete",{correct:true});
+  stageEl.appendChild(d);
 }
 if(sessionId&&alias){step=1}
 render();flush();
