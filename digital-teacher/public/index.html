@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7fbff">
+<title>المعلّم الرقمي محمد غنام</title>
+<style>
+:root{
+  --bg:#eef8ff;--card:#fff;--ink:#17324a;--muted:#61788d;--line:#dbe6ef;
+  --gold:#f6c84b;--green:#178451;--green-soft:#ecfbf3;--red:#c64444;--red-soft:#fff1f1;
+  --blue:#2e6fc8;--blue-soft:#edf5ff;--purple:#7651d4;--purple-soft:#f2edff
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:
+radial-gradient(circle at 90% 0,#fff1b9 0,transparent 25%),
+linear-gradient(180deg,#eaf7ff,#fffaf0 78%);color:var(--ink);
+font-family:Tahoma,Arial,"Noto Sans Arabic",sans-serif}
+body{direction:rtl;text-align:right}
+button,input{font:inherit}
+button{cursor:pointer;touch-action:manipulation}
+.shell{max-width:760px;margin:auto;padding:10px 10px max(24px,env(safe-area-inset-bottom))}
+.teacher{
+ display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:8px
+}
+.teacher-badge{
+ width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-weight:900;
+ background:linear-gradient(145deg,#1d4f7a,#2e78aa);color:#fff;box-shadow:0 6px 18px #1d4f7a33
+}
+.teacher .name{font-weight:900}.teacher .sub{font-size:13px;color:var(--muted)}
+.card{
+ background:var(--card);border:1px solid #e6edf3;border-radius:26px;padding:16px;
+ box-shadow:0 16px 42px rgba(23,50,74,.10)
+}
+.progress{height:11px;border-radius:99px;background:#e9eef3;overflow:hidden;margin-bottom:14px}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffbd32,#ffe078);transition:.25s}
+h1{text-align:center;font-size:28px;margin:4px 0 7px}
+.instruction{text-align:center;font-size:21px;line-height:1.8;font-weight:900;margin:0 0 13px}
+.stage{min-height:320px}
+.msg{min-height:42px;text-align:center;font-size:18px;font-weight:900;line-height:1.6;margin-top:10px}
+.msg.ok{color:var(--green)}.msg.no{color:var(--red)}
+.center{text-align:center}.hero{font-size:140px;font-weight:900;line-height:1;color:#ef743b;margin:10px 0}
+.bigicon{font-size:55px;line-height:1.7}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.choice,.item,.primary,.secondary{
+ min-height:82px;border:3px solid var(--line);border-radius:20px;background:#fff;color:var(--ink);
+ padding:10px;font-weight:900
+}
+.choice{font-size:30px}.item{font-size:40px}
+.primary{width:100%;margin-top:12px;background:linear-gradient(#ffe584,#ffc747);border-color:#efbe43;color:#684400;font-size:20px}
+.secondary{background:var(--blue-soft);border-color:#c9dcfb;color:#245c9c;font-size:17px}
+.good{border-color:#50b77a!important;background:var(--green-soft)!important}
+.bad{border-color:#e67a7a!important;background:var(--red-soft)!important}
+.scene{border:2px dashed #ccdfed;background:#f9fcff;border-radius:22px;padding:14px}
+.pool,.basket{min-height:108px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;padding:10px}
+.pool{background:#f8fbfd;border:2px dashed #d4dfe8;border-radius:20px;margin-bottom:10px}
+.basket{background:#fff6e7;border:5px solid #b88349;border-top-width:10px;border-radius:18px}
+.bridge{text-align:center;background:#fff7dc;border:2px solid #ffe18d;border-radius:22px;padding:16px}
+.dots{font-size:58px;line-height:1.4}.word{font-size:32px;font-weight:900;margin:6px}
+.hint{background:#f3f8fd;border-right:5px solid #77a9dd;border-radius:13px;padding:10px 12px;line-height:1.7;margin-top:10px}
+.photo-box{border:2px solid #d8e4ee;border-radius:22px;background:#fbfdff;padding:14px;text-align:center}
+.photo-box .camera{font-size:58px}.privacy{font-size:14px;line-height:1.7;color:var(--muted);margin:8px 0}
+.photo-preview{max-width:100%;max-height:260px;border-radius:16px;margin-top:9px;display:none}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.actions>*{flex:1}
+.trace{height:300px;position:relative;border:2px dashed #ccd7e0;border-radius:20px;background:#fff;overflow:hidden;touch-action:none}
+.trace .guide{position:absolute;inset:0;display:grid;place-items:center;font-size:215px;font-weight:900;color:#e1e8ee;user-select:none}
+.trace canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.alias{max-width:420px;margin:15px auto}
+.alias input{
+ width:100%;font-size:21px;border:2px solid #cad9e5;border-radius:17px;padding:13px 15px;text-align:center;outline:none
+}
+.alias input:focus{border-color:#679fd0;box-shadow:0 0 0 3px #dcecff}
+.small{text-align:center;color:var(--muted);font-size:14px;line-height:1.7}
+.done{text-align:center;font-size:25px;font-weight:900;line-height:1.9}
+.offline{
+ display:none;background:#fff1cf;color:#704d00;border-radius:12px;padding:8px 10px;text-align:center;font-size:13px;margin-bottom:8px
+}
+@media(max-width:430px){
+ .card{padding:13px}.instruction{font-size:19px}.hero{font-size:120px}.choice{font-size:25px;min-height:75px}
+ .item{font-size:35px;min-height:75px}.dots{font-size:47px}.trace{height:255px}.trace .guide{font-size:185px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="teacher">
+    <div class="teacher-badge">م غ</div>
+    <div><div class="name">المعلّم الرقمي محمد غنام</div><div class="sub">سأرافقك خطوة خطوة</div></div>
+  </div>
+  <div id="offline" class="offline">لا يوجد اتصال الآن. يمكنك المتابعة، وسأرسل تقدمك عند عودة الإنترنت.</div>
+  <main class="card">
+    <div class="progress"><span id="bar"></span></div>
+    <h1 id="title">مغامرة العدد ٤</h1>
+    <p class="instruction" id="instruction">جاهز للمغامرة؟</p>
+    <section class="stage" id="stage"></section>
+    <div id="msg" class="msg" aria-live="polite"></div>
+  </main>
+</div>
+<script>
+(()=>{"use strict";
+const E="٠١٢٣٤٥٦٧٨٩", ar=n=>String(n).replace(/[0-9]/g,d=>E[Number(d)]);
+const $=id=>document.getElementById(id);
+const stageEl=$("stage"), titleEl=$("title"), instEl=$("instruction"), msgEl=$("msg"), bar=$("bar"), off=$("offline");
+const lessonId=(location.pathname.split("/").pop()||"number-4").replace(/[^a-z0-9-]/gi,"").slice(0,80)||"number-4";
+const STAGES=["start","diagnostic","count","make","match","picture","realworld","bridge","symbol","name","trace","final","done"];
+let step=0, sessionId=localStorage.getItem("dt_session_"+lessonId)||"", alias=localStorage.getItem("dt_alias_"+lessonId)||"";
+let stageStarted=Date.now(), attempts=0, firstTry=true, selected=new Set(), locked=false, finalIndex=0;
+let mastery={count:0,make:0,match:0,quantity:0,symbol:0,name:0,trace:0};
+let fastTrack=false;
+const queueKey="dt_queue_v1";
+const queue=()=>{try{return JSON.parse(localStorage.getItem(queueKey)||"[]")}catch{return[]}};
+function setQueue(q){localStorage.setItem(queueKey,JSON.stringify(q.slice(-500)))}
+async function post(url,data){
+  try{
+    const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+    if(!r.ok)throw new Error("http");
+    return await r.json();
+  }catch(e){return null}
+}
+async function event(eventType,extra={}){
+  if(!sessionId)return;
+  const body={
+    sessionId,lessonId,stage:STAGES[step]||"done",eventType,
+    attempts,correct:typeof extra.correct==="boolean"?extra.correct:null,
+    responseMs:Date.now()-stageStarted,
+    progress:Math.round((step/(STAGES.length-1))*100),
+    mastery,status:step>=STAGES.length-1?"completed":"active",
+    payload:extra.payload||{}
+  };
+  const ok=await post("/api/events",body);
+  if(!ok){const q=queue();q.push({url:"/api/events",data:body});setQueue(q)}
+}
+async function flush(){
+  if(!navigator.onLine)return;
+  let q=queue(),left=[];
+  for(const x of q){const ok=await post(x.url,x.data);if(!ok)left.push(x)}
+  setQueue(left);
+}
+window.addEventListener("online",()=>{off.style.display="none";flush()});
+window.addEventListener("offline",()=>off.style.display="block");
+off.style.display=navigator.onLine?"none":"block";
+setInterval(flush,12000);
+
+function progress(){bar.style.width=Math.min(100,Math.max(0,(step/(STAGES.length-1))*100))+"%"}
+function head(t,i){titleEl.textContent=t;instEl.textContent=i;msgEl.textContent="";msgEl.className="msg";stageStarted=Date.now();attempts=0;selected=new Set();progress();event("stage_view")}
+function ok(t){msgEl.textContent=t;msgEl.className="msg ok";try{navigator.vibrate&&navigator.vibrate(25)}catch{}}
+function no(t){attempts++;firstTry=false;msgEl.textContent=t;msgEl.className="msg no";event("answer",{correct:false,payload:{hintLevel:attempts}})}
+function hint(t){const h=document.createElement("div");h.className="hint";h.textContent=t;stageEl.appendChild(h);event("hint",{payload:{level:attempts}})}
+function next(skill,text){
+  if(locked)return;locked=true;
+  if(skill)mastery[skill]=Math.max(mastery[skill]||0,firstTry?2:1);
+  event("stage_complete",{correct:true,payload:{firstTry}});
+  ok(text);
+  setTimeout(()=>{step++;locked=false;firstTry=true;render()},650)
+}
+function button(text,cls="choice"){const b=document.createElement("button");b.type="button";b.className=cls;b.textContent=text;return b}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function markWrong(b,t){
+  b&&b.classList.add("bad");setTimeout(()=>b&&b.classList.remove("bad"),450);no(t);
+  if(attempts===2)hint("عدّ ببطء، والمس كل شيء مرة واحدة فقط.");
+}
+
+async function startSession(){
+  const v=$("aliasInput").value.trim().replace(/\s+/g," ").slice(0,40);
+  if(v.length<2){no("اكتب اسمك الأول أو الرمز الذي أعطاك إياه المعلم.");return}
+  const r=await post("/api/sessions",{alias:v,lessonId});
+  if(!r){no("نحتاج اتصالًا بالإنترنت في أول مرة فقط. حاول مرة أخرى.");return}
+  alias=v;sessionId=r.session.id;localStorage.setItem("dt_alias_"+lessonId,alias);localStorage.setItem("dt_session_"+lessonId,sessionId);
+  step=1;render();
+}
+function render(){
+  stageEl.innerHTML="";msgEl.textContent="";progress();
+  if(step===0)return welcome();
+  if(step===1)return diagnostic();
+  if(step===2)return countStage();
+  if(step===3)return makeStage();
+  if(step===4)return matchStage();
+  if(step===5)return pictureStage();
+  if(step===6)return realWorldStage();
+  if(step===7)return bridgeStage();
+  if(step===8)return symbolStage();
+  if(step===9)return nameStage();
+  if(step===10)return traceStage();
+  if(step===11)return finalStage();
+  return doneStage();
+}
+function welcome(){
+  head("مغامرة العدد ٤","اكتب اسمك الأول أو الرمز الذي أعطاك إياه المعلم، ثم ابدأ.");
+  const c=document.createElement("div");c.className="center";
+  c.innerHTML='<div class="hero">٤</div><div class="bigicon">✨ 🔑 ⭐</div>';
+  const a=document.createElement("div");a.className="alias";
+  a.innerHTML='<input id="aliasInput" maxlength="40" autocomplete="off" inputmode="text" placeholder="اسمك الأول أو الرمز">';
+  const b=button("ابدأ المغامرة","primary");b.onclick=startSession;
+  stageEl.append(c,a,b);
+}
+function diagnostic(){
+  head("تحدٍّ سريع","أي مجموعة فيها ٤ نجوم؟");
+  const g=document.createElement("div");g.className="grid3";
+  shuffle([{t:"⭐ ⭐ ⭐",ok:0},{t:"⭐ ⭐ ⭐ ⭐",ok:1},{t:"⭐ ⭐ ⭐ ⭐ ⭐",ok:0}]).forEach(x=>{
+    const b=button(x.t);b.onclick=()=>{
+      if(x.ok){fastTrack=firstTry;next("quantity","أحسنت! رأيت ٤ بسرعة.");}
+      else markWrong(b,"جرّب العد مرة أخرى.");
+    };g.appendChild(b)
+  });stageEl.appendChild(g);
+}
+function countStage(){
+  head("اجمع ٤ مفاتيح","المس ٤ مفاتيح فقط، وعدّها واحدًا واحدًا.");
+  const g=document.createElement("div");g.className="grid3 scene";const got=new Set();
+  for(let i=0;i<6;i++){
+    const b=button("🔑","item");
+    b.onclick=()=>{
+      if(got.has(i))return;
+      if(got.size>=4){markWrong(b,"توقّف. نحتاج ٤ فقط.");return}
+      got.add(i);b.classList.add("good");event("object_selected",{payload:{count:got.size}});
+      if(got.size===4)next("count","ممتاز! عددتَ ٤ مفاتيح.");
+    };g.appendChild(b)
+  }stageEl.appendChild(g);
+}
+function makeStage(){
+  head("كوِّن ٤","ضع ٤ بلورات في السلة.");
+  const pool=document.createElement("div");pool.className="pool";const basket=document.createElement("div");basket.className="basket";const inside=new Set();
+  function draw(){pool.innerHTML="";basket.innerHTML="";
+    for(let i=0;i<6;i++){const b=button("💎","item");
+      if(inside.has(i)){b.onclick=()=>{inside.delete(i);draw()};basket.appendChild(b)}
+      else{b.onclick=()=>{inside.add(i);draw()};pool.appendChild(b)}
+    }
+  }draw();
+  const check=button("تحقّق","primary");check.onclick=()=>inside.size===4?next("make","رائع! صنعتَ مجموعة فيها ٤."):markWrong(null,"اجعل في السلة ٤ بلورات فقط.");
+  stageEl.append(pool,basket,check);
+}
+function matchStage(){
+  head("واحد لكل واحد","لدينا ٤ أرانب. اختر ٤ جزرات، جزرة لكل أرنب.");
+  const rabbits=document.createElement("div");rabbits.className="center bigicon";rabbits.textContent="🐰 🐰 🐰 🐰";
+  const g=document.createElement("div");g.className="grid3";
+  for(let i=0;i<6;i++){const b=button("🥕","item");b.onclick=()=>{if(selected.has(i)){selected.delete(i);b.classList.remove("good")}else{selected.add(i);b.classList.add("good")}};g.appendChild(b)}
+  const check=button("تحقّق","primary");check.onclick=()=>selected.size===4?next("match","أحسنت! ٤ أرانب أخذت ٤ جزرات."):markWrong(null,"كل أرنب يحتاج جزرة واحدة. كم أرنبًا ترى؟");
+  stageEl.append(rabbits,g,check);
+}
+function pictureStage(){
+  head("اكتشف العدد","اختر كل مجموعة فيها ٤ أشياء.");
+  const data=[{t:"⚽ ⚽ ⚽ ⚽",o:1},{t:"🐟 🐟 🐟",o:0},{t:"🌼 🌼 🌼 🌼",o:1},{t:"🚗 🚗",o:0},{t:"🧁 🧁 🧁 🧁",o:1},{t:"🎈 🎈 🎈 🎈 🎈",o:0}];
+  const g=document.createElement("div");g.className="grid3";
+  data.forEach((x,i)=>{const b=button(x.t);b.onclick=()=>{if(selected.has(i)){selected.delete(i);b.classList.remove("good")}else{selected.add(i);b.classList.add("good")}};g.appendChild(b)});
+  const check=button("تحقّق","primary");check.onclick=()=>{
+    const yes=selected.size===3&&[0,2,4].every(i=>selected.has(i));
+    yes?next("quantity","صحيح! الأشياء تغيّرت، لكن العدد بقي ٤."):markWrong(null,"اختر فقط المجموعات التي تحتوي ٤ أشياء.");
+  };
+  stageEl.append(g,check);
+}
+function compressImage(file,max=720,quality=.72){
+ return new Promise((resolve,reject)=>{
+  const img=new Image(),url=URL.createObjectURL(file);
+  img.onload=()=>{let w=img.width,h=img.height,scale=Math.min(1,max/Math.max(w,h));w=Math.round(w*scale);h=Math.round(h*scale);
+   const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);
+   URL.revokeObjectURL(url);resolve(c.toDataURL("image/jpeg",quality))
+  };img.onerror=reject;img.src=url
+ })
+}
+async function uploadEvidence(dataUrl,stage,caption){
+  const body={sessionId,lessonId,stage,dataUrl,caption};const r=await post("/api/evidence",body);
+  if(!r){const q=queue();q.push({url:"/api/evidence",data:body});setQueue(q);return false}
+  return true
+}
+function realWorldStage(){
+  head("مهمة من حولك","أحضر ٤ أقلام أو ٤ أشياء صغيرة، وضعها أمامك.");
+  const box=document.createElement("div");box.className="photo-box";
+  box.innerHTML='<div class="camera">📷</div><div style="font-size:20px;font-weight:900">هل تريد أن تري المعلم ما فعلت؟</div><div class="privacy">إذا أرفقت صورة، ستصل إلى المعلم محمد غنام للمراجعة فقط. لن تعمل الكاميرا وحدها، ويمكنك متابعة الدرس دون صورة.</div>';
+  const input=document.createElement("input");input.type="file";input.accept="image/jpeg,image/png,image/webp";input.setAttribute("capture","environment");input.style.display="none";
+  const preview=document.createElement("img");preview.className="photo-preview";
+  let dataUrl="";
+  const choose=button("📷 أرفق صورة","secondary");choose.onclick=()=>input.click();
+  input.onchange=async()=>{const f=input.files&&input.files[0];if(!f)return;if(f.size>8*1024*1024){no("الصورة كبيرة جدًا. اختر صورة أصغر.");return}
+    try{dataUrl=await compressImage(f);preview.src=dataUrl;preview.style.display="block";ok("الصورة جاهزة للإرسال.");}catch{no("تعذر تجهيز الصورة. يمكنك المتابعة دونها.")}
+  };
+  const send=button("أرسل وأكمل","primary");send.onclick=async()=>{
+    if(dataUrl){send.disabled=true;const sent=await uploadEvidence(dataUrl,"realworld","مهمة: ٤ أشياء من البيئة");event("real_world_task",{correct:null,payload:{evidence:sent?"sent":"queued"}});send.disabled=false}
+    next(null,dataUrl?"تم إرسال دليلك للمعلم. أحسنت!":"أحسنت على تنفيذ المهمة.");
+  };
+  const skip=button("نفّذت المهمة وأكمل دون صورة","secondary");skip.onclick=()=>{event("real_world_task",{payload:{evidence:"not_provided"}});next(null,"ممتاز. نكمل الآن.")};
+  const actions=document.createElement("div");actions.className="actions";actions.append(choose,skip);
+  box.append(input,preview,actions,send);stageEl.appendChild(box);
+}
+function bridgeStage(){
+  head("من الأشياء إلى الرمز","شاهد: ٤ أشياء، اسمها «أربعة»، ونكتبها ٤.");
+  const b=document.createElement("div");b.className="bridge";b.innerHTML='<div class="dots">● ● ● ●</div><div class="word">أربعة</div><div class="hero" style="font-size:115px;margin:6px">٤</div>';
+  const go=button("عرفتُ العلاقة","primary");go.onclick=()=>next("symbol","أحسنت! ربطتَ الكمية بالرمز.");
+  stageEl.append(b,go);
+}
+function symbolStage(){
+  head("اختر الرمز","أين العدد ٤؟");
+  const g=document.createElement("div");g.className="grid3";
+  shuffle(["٣","٤","٥"]).forEach(v=>{const b=button(v,"choice");b.style.fontSize="55px";b.onclick=()=>v==="٤"?next("symbol","نعم! هذا هو ٤."):markWrong(b,"تذكّر: أربع نقاط يقابلها الرمز ٤.");g.appendChild(b)});
+  stageEl.appendChild(g);
+}
+function nameStage(){
+  head("ما اسمه؟","ما اسم الرمز ٤؟");
+  const h=document.createElement("div");h.className="hero";h.textContent="٤";
+  const g=document.createElement("div");g.className="grid3";
+  shuffle(["ثلاثة","أربعة","خمسة"]).forEach(v=>{const b=button(v);b.onclick=()=>v==="أربعة"?next("name","صحيح! اسم ٤ هو «أربعة»."):markWrong(b,"قل: أربعة. ثم اختر الكلمة الصحيحة.");g.appendChild(b)});
+  stageEl.append(h,g);
+}
+function traceStage(){
+  head("اكتب ٤","تتبّع شكل ٤ بإصبعك، ثم اضغط «أنهيت».");
+  const note=document.createElement("div");note.className="small";note.textContent="سيُحفظ رسمك للمعلم كدليل تعلم عند الضغط على «أنهيت».";
+  const box=document.createElement("div");box.className="trace";const guide=document.createElement("div");guide.className="guide";guide.textContent="٤";
+  const canvas=document.createElement("canvas");canvas.width=700;canvas.height=420;box.append(guide,canvas);
+  const ctx=canvas.getContext("2d");ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#7651d4";ctx.lineWidth=16;
+  let drawing=false,last=null,len=0;
+  const p=e=>{const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height}};
+  canvas.onpointerdown=e=>{drawing=true;last=p(e);canvas.setPointerCapture(e.pointerId)};
+  canvas.onpointermove=e=>{if(!drawing)return;const q=p(e);ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(q.x,q.y);ctx.stroke();len+=Math.hypot(q.x-last.x,q.y-last.y);last=q};
+  canvas.onpointerup=()=>{drawing=false;last=null};canvas.onpointercancel=canvas.onpointerup;
+  const clear=button("امسح","secondary");clear.onclick=()=>{ctx.clearRect(0,0,canvas.width,canvas.height);len=0};
+  const done=button("أنهيت","primary");done.onclick=async()=>{
+    if(len<350){markWrong(done,"أكمل رسم شكل ٤ أولًا.");return}
+    const dataUrl=canvas.toDataURL("image/png");
+    await uploadEvidence(dataUrl,"trace","رسم العدد ٤ بالإصبع");
+    event("trace_complete",{correct:true,payload:{strokeLength:Math.round(len)}});next("trace","أحسنت! أرسلت رسمك للمعلم.");
+  };
+  const a=document.createElement("div");a.className="actions";a.append(clear,done);stageEl.append(note,box,a);
+}
+const finals=[
+ {q:"كم نجمة ترى؟",show:"⭐ ⭐ ⭐ ⭐",opts:["٣","٤","٥"],a:"٤"},
+ {q:"أي مجموعة فيها ٤؟",show:"",opts:["● ● ●","● ● ● ●","● ●"],a:"● ● ● ●"},
+ {q:"ما اسم الرمز ٤؟",show:"٤",opts:["ثلاثة","أربعة","خمسة"],a:"أربعة"}
+];
+function finalStage(){
+  if(finalIndex>=finals.length){step=12;event("lesson_complete",{correct:true});render();return}
+  const q=finals[finalIndex];head("تحدي النهاية",q.q);
+  if(q.show){const s=document.createElement("div");s.className=q.show==="٤"?"hero":"center bigicon";s.textContent=q.show;stageEl.appendChild(s)}
+  const g=document.createElement("div");g.className="grid3";shuffle(q.opts).forEach(v=>{
+    const b=button(v);b.onclick=()=>{if(v===q.a){event("final_answer",{correct:true,payload:{question:finalIndex}});ok("صحيح!");setTimeout(()=>{finalIndex++;render()},450)}
+      else{event("final_answer",{correct:false,payload:{question:finalIndex}});markWrong(b,"فكّر مرة أخرى.");}};g.appendChild(b)
+  });stageEl.appendChild(g);
+}
+function doneStage(){
+  head("أحسنت يا بطل!","أنهيت درس العدد ٤.");
+  bar.style.width="100%";
+  const d=document.createElement("div");d.className="done";d.innerHTML='<div class="bigicon">🎉 🏆 🎉</div><div class="hero" style="font-size:110px">٤</div><div>أستطيع أن أعدّ ٤ أشياء.<br>أتعرف إلى الرمز ٤.<br>أعرف كلمة «أربعة».<br>وتدرّبت على كتابة ٤.</div><div class="small" style="margin-top:14px">إعداد: محمد غنام</div>';
+  stageEl.appendChild(d);event("lesson_complete",{correct:true});
+}
+if(sessionId&&alias){step=1}
+render();flush();
+})();
+</script>
+</body>
+</html>
