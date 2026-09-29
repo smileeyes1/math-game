@@ -13,6 +13,9 @@ for (const rel of files) {
 const student = fs.readFileSync(path.join(__dirname,"..","public/index.html"),"utf8");
 if (!student.includes("/api/evidence")) throw new Error("student evidence API missing");
 if (student.includes("speechSynthesis")) throw new Error("student must not depend on device synthetic speech");
+if (!student.includes("restartLesson")) throw new Error("lesson replay is missing");
+if (!student.includes("arcadeStage")) throw new Error("number 4 arcade reinforcement is missing");
+if (!student.includes("لعبة أركيد ٤")) throw new Error("arcade button label is missing");
 const teacher = fs.readFileSync(path.join(__dirname,"..","public/teacher.html"),"utf8");
 if (!teacher.includes("/api/teacher/sessions")) throw new Error("teacher sessions API missing");
 if (!teacher.includes("EventSource")) throw new Error("near-real-time teacher stream missing");
