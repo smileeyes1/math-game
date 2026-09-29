@@ -529,7 +529,7 @@ function doneStage(){
   const replay=button("🔁 أعد الدرس","primary");replay.onclick=()=>restartLesson(replay);
   const arcade=button("🎮 لعبة أركيد ٤","secondary");arcade.onclick=arcadeStage;
   row.append(replay,arcade);d.appendChild(row);
-  stageEl.appendChild(d);audioIndex=13;setTimeout(()=>playAudio(13),120);
+  stageEl.appendChild(d);
 }
 $("listenBtn").onclick=()=>playAudio(audioIndex);
 render();flush();
