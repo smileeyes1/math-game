@@ -27,7 +27,7 @@ button{cursor:pointer;touch-action:manipulation}
  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-weight:900;
  background:linear-gradient(145deg,#1d4f7a,#2e78aa);color:#fff;box-shadow:0 6px 18px #1d4f7a33
 }
-.teacher .name{font-weight:900}.teacher .sub{font-size:13px;color:var(--muted)}
+.teacher .name{font-weight:900}.teacher .sub{font-size:13px;color:var(--muted)}.listen{margin-right:auto;border:0;background:#edf5ff;color:#245c9c;border-radius:999px;padding:9px 12px;font-weight:900}
 .card{
  background:var(--card);border:1px solid #e6edf3;border-radius:26px;padding:16px;
  box-shadow:0 16px 42px rgba(23,50,74,.10)
@@ -86,7 +86,7 @@ h1{text-align:center;font-size:28px;margin:4px 0 7px}
 <div class="shell">
   <div class="teacher">
     <div class="teacher-badge">م غ</div>
-    <div><div class="name">المعلّم الرقمي محمد غنام</div><div class="sub">سأرافقك خطوة خطوة</div></div>
+    <div><div class="name">المعلّم الرقمي محمد غنام</div><div class="sub">سأرافقك خطوة خطوة</div></div><button id="listenBtn" class="listen" type="button">🔊 اسمع</button>
   </div>
   <div id="offline" class="offline">لا يوجد اتصال الآن. يمكنك المتابعة، وسأرسل تقدمك عند عودة الإنترنت.</div>
   <main class="card">
@@ -102,11 +102,36 @@ h1{text-align:center;font-size:28px;margin:4px 0 7px}
 const E="٠١٢٣٤٥٦٧٨٩", ar=n=>String(n).replace(/[0-9]/g,d=>E[Number(d)]);
 const $=id=>document.getElementById(id);
 const stageEl=$("stage"), titleEl=$("title"), instEl=$("instruction"), msgEl=$("msg"), bar=$("bar"), off=$("offline");
+
+const AUDIO=[
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=715f5d8c-e62e-4a58-8a70-05b06e90a1b7.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=7d28dc6d-69d0-484d-a4fc-9d4a4c4e2f2f.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=86c6733d-5528-4896-8380-d71ae870f542.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=1ed4997b-e269-435b-bfc7-931ffe22eb64.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=20ea42b7-7f5b-491e-9222-744f5fed570d.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=97b4a2d5-dde3-4e81-9a46-37f454be0d91.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=dd9e5b56-075e-4f08-b251-5c1742e1c593.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=b42f8e81-265e-4974-a58c-ca127d0c7d07.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=f1890635-baef-4620-be37-9a976ae577f1.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=6785ceb9-e74c-46db-a5b6-e5fa6f6ad6ac.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=35b6784e-4c2f-4bd5-9687-b895414a5256.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=635127e8-a65f-4222-a397-4af48f0afe63.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=8378f0ad-042b-4820-ad28-c0b58ce40efe.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=0550017f-2c6a-456c-a065-2bec34b3c354.wav"
+];
+let audioIndex=0;
+const narrator=new Audio();
+narrator.preload="auto";
+function playAudio(i){
+  audioIndex=Math.max(0,Math.min(AUDIO.length-1,i));
+  try{narrator.pause();narrator.currentTime=0;narrator.src=AUDIO[audioIndex];narrator.play().catch(()=>{});}catch{}
+}
+
 const lessonId=(location.pathname.split("/").pop()||"number-4").replace(/[^a-z0-9-]/gi,"").slice(0,80)||"number-4";
-const STAGES=["start","diagnostic","count","make","match","picture","realworld","bridge","symbol","name","trace","final","done"];
+const STAGES=["start","diagnostic","count","make","match","picture","realworld","bridge","sequence","symbol","name","trace","final","done"];
 let step=0, sessionId=localStorage.getItem("dt_session_"+lessonId)||"", alias=localStorage.getItem("dt_alias_"+lessonId)||"";
 let stageStarted=Date.now(), attempts=0, firstTry=true, selected=new Set(), locked=false, finalIndex=0;
-let mastery={count:0,make:0,match:0,quantity:0,symbol:0,name:0,trace:0};
+let mastery={count:0,make:0,match:0,quantity:0,sequence:0,symbol:0,name:0,trace:0};
 let fastTrack=false;
 const queueKey="dt_queue_v1";
 const queue=()=>{try{return JSON.parse(localStorage.getItem(queueKey)||"[]")}catch{return[]}};
@@ -143,7 +168,7 @@ off.style.display=navigator.onLine?"none":"block";
 setInterval(flush,12000);
 
 function progress(){bar.style.width=Math.min(100,Math.max(0,(step/(STAGES.length-1))*100))+"%"}
-function head(t,i){titleEl.textContent=t;instEl.textContent=i;msgEl.textContent="";msgEl.className="msg";stageStarted=Date.now();attempts=0;selected=new Set();progress();event("stage_view")}
+function head(t,i){titleEl.textContent=t;instEl.textContent=i;msgEl.textContent="";msgEl.className="msg";stageStarted=Date.now();attempts=0;selected=new Set();progress();event("stage_view");audioIndex=Math.max(0,Math.min(AUDIO.length-1,step));if(step>0)setTimeout(()=>playAudio(audioIndex),120)}
 function ok(t){msgEl.textContent=t;msgEl.className="msg ok";try{navigator.vibrate&&navigator.vibrate(25)}catch{}}
 function no(t){attempts++;firstTry=false;msgEl.textContent=t;msgEl.className="msg no";event("answer",{correct:false,payload:{hintLevel:attempts}})}
 function hint(t){const h=document.createElement("div");h.className="hint";h.textContent=t;stageEl.appendChild(h);event("hint",{payload:{level:attempts}})}
@@ -179,10 +204,11 @@ function render(){
   if(step===5)return pictureStage();
   if(step===6)return realWorldStage();
   if(step===7)return bridgeStage();
-  if(step===8)return symbolStage();
-  if(step===9)return nameStage();
-  if(step===10)return traceStage();
-  if(step===11)return finalStage();
+  if(step===8)return sequenceStage();
+  if(step===9)return symbolStage();
+  if(step===10)return nameStage();
+  if(step===11)return traceStage();
+  if(step===12)return finalStage();
   return doneStage();
 }
 function welcome(){
@@ -191,7 +217,7 @@ function welcome(){
   c.innerHTML='<div class="hero">٤</div><div class="bigicon">✨ 🔑 ⭐</div>';
   const a=document.createElement("div");a.className="alias";
   a.innerHTML='<input id="aliasInput" maxlength="40" autocomplete="off" inputmode="text" placeholder="اسمك الأول أو الرمز">';
-  const b=button("ابدأ المغامرة","primary");b.onclick=startSession;
+  const b=button("ابدأ المغامرة","primary");b.onclick=()=>{playAudio(0);startSession()};
   stageEl.append(c,a,b);
 }
 function diagnostic(){
@@ -287,6 +313,19 @@ function bridgeStage(){
   const go=button("عرفتُ العلاقة","primary");go.onclick=()=>next("symbol","أحسنت! ربطتَ الكمية بالرمز.");
   stageEl.append(b,go);
 }
+
+function sequenceStage(){
+  head("ضع ٤ في مكانه","أكمل السلم: ١، ٢، ٣، □");
+  const b=document.createElement("div");b.className="bridge";
+  b.innerHTML='<div style="font-size:46px;font-weight:900;letter-spacing:12px;direction:rtl">١ ← ٢ ← ٣ ← □</div><div class="small">ما العدد الذي يأتي بعد ٣؟</div>';
+  const g=document.createElement("div");g.className="grid3";shuffle(["٢","٤","٥"]).forEach(v=>{
+    const x=button(v);x.style.fontSize="52px";
+    x.onclick=()=>v==="٤"?next("sequence","صحيح! بعد ٣ يأتي ٤."):markWrong(x,"ابدأ من ١ وعدّ: ١، ٢، ٣، ...");
+    g.appendChild(x);
+  });
+  stageEl.append(b,g);
+}
+
 function symbolStage(){
   head("اختر الرمز","أين العدد ٤؟");
   const g=document.createElement("div");g.className="grid3";
@@ -323,10 +362,11 @@ function traceStage(){
 const finals=[
  {q:"كم نجمة ترى؟",show:"⭐ ⭐ ⭐ ⭐",opts:["٣","٤","٥"],a:"٤"},
  {q:"أي مجموعة فيها ٤؟",show:"",opts:["● ● ●","● ● ● ●","● ●"],a:"● ● ● ●"},
+ {q:"ما العدد الذي يأتي بعد ٣؟",show:"١  ←  ٢  ←  ٣  ←  □",opts:["٢","٤","٥"],a:"٤"},
  {q:"ما اسم الرمز ٤؟",show:"٤",opts:["ثلاثة","أربعة","خمسة"],a:"أربعة"}
 ];
 function finalStage(){
-  if(finalIndex>=finals.length){step=12;event("lesson_complete",{correct:true});render();return}
+  if(finalIndex>=finals.length){step=13;event("lesson_complete",{correct:true});render();return}
   const q=finals[finalIndex];head("تحدي النهاية",q.q);
   if(q.show){const s=document.createElement("div");s.className=q.show==="٤"?"hero":"center bigicon";s.textContent=q.show;stageEl.appendChild(s)}
   const g=document.createElement("div");g.className="grid3";shuffle(q.opts).forEach(v=>{
@@ -337,9 +377,10 @@ function finalStage(){
 function doneStage(){
   head("أحسنت يا بطل!","أنهيت درس العدد ٤.");
   bar.style.width="100%";
-  const d=document.createElement("div");d.className="done";d.innerHTML='<div class="bigicon">🎉 🏆 🎉</div><div class="hero" style="font-size:110px">٤</div><div>أستطيع أن أعدّ ٤ أشياء.<br>أتعرف إلى الرمز ٤.<br>أعرف كلمة «أربعة».<br>وتدرّبت على كتابة ٤.</div><div class="small" style="margin-top:14px">إعداد: محمد غنام</div>';
-  stageEl.appendChild(d);
+  const d=document.createElement("div");d.className="done";d.innerHTML='<div class="bigicon">🎉 🏆 🎉</div><div class="hero" style="font-size:110px">٤</div><div>أستطيع أن أعدّ ٤ أشياء.<br>أكوّن مجموعة من ٤.<br>أطابق واحدًا لواحد.<br>أعرف أن بعد ٣ يأتي ٤.<br>أتعرف إلى الرمز ٤ وكلمة «أربعة».<br>وتدرّبت على كتابة ٤.</div><div class="small" style="margin-top:14px">إعداد: محمد غنام</div>';
+  stageEl.appendChild(d);audioIndex=13;setTimeout(()=>playAudio(13),120);
 }
+$("listenBtn").onclick=()=>playAudio(audioIndex);
 if(sessionId&&alias){step=1}
 render();flush();
 })();
