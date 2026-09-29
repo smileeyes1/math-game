@@ -124,7 +124,7 @@ function renderList(){
   d.onclick=()=>{currentId=s.id;renderList();loadDetail(s.id)};box.appendChild(d)
  }
 }
-const names={count:"العد حتى ٤",make:"تكوين مجموعة من ٤",match:"المطابقة واحدًا لواحد",quantity:"تمييز الكمية ٤",symbol:"ربط الكمية بالرمز ٤",name:"اسم العدد «أربعة»",trace:"كتابة ٤"};
+const names={count:"العد حتى ٤",make:"تكوين مجموعة من ٤",match:"المطابقة واحدًا لواحد",quantity:"تمييز الكمية ٤",sequence:"تسلسل ١–٤",symbol:"ربط الكمية بالرمز ٤",name:"اسم العدد «أربعة»",trace:"كتابة ٤"};
 function masteryText(m){
  const low=Object.entries(names).filter(([k])=>Number(m?.[k]||0)<2).map(([,v])=>v);
  const strong=Object.entries(names).filter(([k])=>Number(m?.[k]||0)>=2).map(([,v])=>v);
