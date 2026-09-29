@@ -129,7 +129,7 @@ function playAudio(i){
 
 const lessonId=(location.pathname.split("/").pop()||"number-4").replace(/[^a-z0-9-]/gi,"").slice(0,80)||"number-4";
 const STAGES=["start","diagnostic","count","make","match","picture","realworld","bridge","sequence","symbol","name","trace","final","done"];
-let step=0, sessionId=localStorage.getItem("dt_session_"+lessonId)||"", alias=localStorage.getItem("dt_alias_"+lessonId)||"";
+let step=0, sessionId=localStorage.getItem("dt_session_"+lessonId)||"", alias=localStorage.getItem("dt_alias_"+lessonId)||"";const savedStep=Number(localStorage.getItem("dt_step_"+lessonId)||"0");if(sessionId&&alias&&Number.isInteger(savedStep)&&savedStep>0&&savedStep<STAGES.length)step=savedStep;
 let stageStarted=Date.now(), attempts=0, firstTry=true, selected=new Set(), locked=false, finalIndex=0;
 let mastery={count:0,make:0,match:0,quantity:0,sequence:0,symbol:0,name:0,trace:0};
 let fastTrack=false;
@@ -195,7 +195,7 @@ async function startSession(){
   step=1;render();
 }
 function render(){
-  stageEl.innerHTML="";msgEl.textContent="";progress();
+  if(sessionId&&alias)localStorage.setItem("dt_step_"+lessonId,String(step));stageEl.innerHTML="";msgEl.textContent="";progress();
   if(step===0)return welcome();
   if(step===1)return diagnostic();
   if(step===2)return countStage();
@@ -217,7 +217,7 @@ function welcome(){
   c.innerHTML='<div class="hero">٤</div><div class="bigicon">✨ 🔑 ⭐</div>';
   const a=document.createElement("div");a.className="alias";
   a.innerHTML='<input id="aliasInput" maxlength="40" autocomplete="off" inputmode="text" placeholder="اسمك الأول أو الرمز">';
-  const b=button("ابدأ المغامرة","primary");b.onclick=()=>{playAudio(0);startSession()};
+  const b=button("ابدأ المغامرة","primary");b.onclick=startSession;
   stageEl.append(c,a,b);
 }
 function diagnostic(){
@@ -405,7 +405,6 @@ function doneStage(){
   stageEl.appendChild(d);audioIndex=13;setTimeout(()=>playAudio(13),120);
 }
 $("listenBtn").onclick=()=>playAudio(audioIndex);
-if(sessionId&&alias){step=1}
 render();flush();
 })();
 </script>
