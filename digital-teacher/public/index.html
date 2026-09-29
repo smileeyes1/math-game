@@ -76,6 +76,25 @@ h1{text-align:center;font-size:28px;margin:4px 0 7px}
 .offline{
  display:none;background:#fff1cf;color:#704d00;border-radius:12px;padding:8px 10px;text-align:center;font-size:13px;margin-bottom:8px
 }
+
+.arcadeWrap{background:#08152b;border:5px solid #1d3557;border-radius:22px;padding:12px;box-shadow:inset 0 0 0 3px #3d5a80,0 10px 26px #08152b44;color:#fff;text-align:center}
+.arcadeTitle{font-weight:900;font-size:24px;letter-spacing:.5px;margin-bottom:7px;color:#ffe36e;text-shadow:2px 2px 0 #8c5d00}
+.arcadeHud{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:6px 0 10px;font-weight:900}
+.arcadeScore{background:#10284b;border:2px solid #31527d;border-radius:12px;padding:6px 10px}
+.arcadeScreen{position:relative;height:270px;overflow:hidden;border:3px solid #31527d;border-radius:14px;background:
+linear-gradient(#071021,#0c1d38);box-shadow:inset 0 0 24px #000}
+.arcadeScreen:before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,#fff 1px,transparent 1.5px);background-size:37px 31px;opacity:.28;pointer-events:none}
+.alien{position:absolute;top:35px;width:30%;min-width:82px;max-width:150px;height:95px;border:3px solid #77e1ff;border-radius:12px;background:#12335a;color:#fff;font-size:23px;font-weight:900;display:grid;place-items:center;padding:6px;animation:arcadeFloat 1.15s ease-in-out infinite alternate;box-shadow:0 0 14px #45d9ff77}
+.alien:nth-child(2){animation-delay:.15s}.alien:nth-child(3){animation-delay:.3s}
+.alien.goodTarget{border-color:#ffd84c}
+.alien:active{transform:scale(.94)}
+@keyframes arcadeFloat{from{top:30px}to{top:145px}}
+.arcadeShip{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:46px;filter:drop-shadow(0 0 8px #6cf)}
+.arcadeFlash{animation:flash .24s 2}@keyframes flash{50%{filter:brightness(2)}}
+.arcadeWin{font-size:30px;line-height:1.7;padding:28px 8px;color:#ffe36e;font-weight:900}
+.replayRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+@media(max-width:430px){.arcadeScreen{height:240px}.alien{font-size:20px;height:88px}.replayRow{grid-template-columns:1fr}}
+
 @media(max-width:430px){
  .card{padding:13px}.instruction{font-size:19px}.hero{font-size:120px}.choice{font-size:25px;min-height:75px}
  .item{font-size:35px;min-height:75px}.dots{font-size:47px}.trace{height:255px}.trace .guide{font-size:185px}
@@ -117,7 +136,9 @@ const AUDIO=[
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=35b6784e-4c2f-4bd5-9687-b895414a5256.wav",
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=635127e8-a65f-4222-a397-4af48f0afe63.wav",
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=8378f0ad-042b-4820-ad28-c0b58ce40efe.wav",
-"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=0550017f-2c6a-456c-a065-2bec34b3c354.wav"
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=0550017f-2c6a-456c-a065-2bec34b3c354.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=c8bba1b3-2e2e-4c10-a41f-6cf76952693d.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=5a24a2f3-d2db-4279-a972-37913d68ba88.wav"
 ];
 let audioIndex=0;
 const narrator=new Audio();
@@ -125,6 +146,16 @@ narrator.preload="auto";
 function playAudio(i){
   audioIndex=Math.max(0,Math.min(AUDIO.length-1,i));
   try{narrator.pause();narrator.currentTime=0;narrator.src=AUDIO[audioIndex];narrator.play().catch(()=>{});}catch{}
+}
+let retroCtx=null;
+function retroTone(freq=520,dur=.08,type="square"){
+  try{
+    retroCtx=retroCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=retroCtx.createOscillator(),g=retroCtx.createGain();
+    o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.055,retroCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,retroCtx.currentTime+dur);
+    o.connect(g);g.connect(retroCtx.destination);o.start();o.stop(retroCtx.currentTime+dur);
+  }catch{}
 }
 
 const lessonId=(location.pathname.split("/").pop()||"number-4").replace(/[^a-z0-9-]/gi,"").slice(0,80)||"number-4";
@@ -407,10 +438,97 @@ function finalStage(){
       else{event("final_answer",{correct:false,payload:{question:finalIndex}});markWrong(b,"فكّر مرة أخرى.");}};g.appendChild(b)
   });stageEl.appendChild(g);
 }
+
+async function restartLesson(btn){
+  if(btn)btn.disabled=true;
+  try{narrator.pause()}catch{}
+  const r=await post("/api/sessions",{alias,lessonId});
+  if(!r){
+    if(btn)btn.disabled=false;
+    no("تعذر بدء جولة جديدة الآن. حاول مرة أخرى عند وجود الإنترنت.");
+    return;
+  }
+  sessionId=r.session.id;
+  localStorage.setItem("dt_session_"+lessonId,sessionId);
+  mastery={count:0,make:0,match:0,quantity:0,sequence:0,symbol:0,name:0,trace:0};
+  finalIndex=0;attempts=0;firstTry=true;selected=new Set();locked=false;step=1;
+  localStorage.setItem("dt_step_"+lessonId,"1");
+  event("replay_started",{payload:{source:"completion"}});
+  render();
+}
+function arcadeStage(){
+  try{narrator.pause()}catch{}
+  titleEl.textContent="لعبة أركيد ٤";
+  instEl.textContent="اضرب الهدف الذي يحمل ٤ نجوم فقط.";
+  msgEl.textContent="";msgEl.className="msg";bar.style.width="100%";
+  stageEl.innerHTML="";
+  let score=0,round=0,busy=false;
+  const wrap=document.createElement("div");wrap.className="arcadeWrap";
+  const title=document.createElement("div");title.className="arcadeTitle";title.textContent="🚀 مهمة الصاروخ ٤";
+  const hud=document.createElement("div");hud.className="arcadeHud";
+  const scoreEl=document.createElement("div");scoreEl.className="arcadeScore";scoreEl.textContent="الإصابات: ٠ / ٤";
+  const help=document.createElement("div");help.className="small";help.style.color="#d8eaff";help.textContent="اضغط الهدف الصحيح";
+  hud.append(scoreEl,help);
+  const screen=document.createElement("div");screen.className="arcadeScreen";
+  const ship=document.createElement("div");ship.className="arcadeShip";ship.textContent="🚀";screen.appendChild(ship);
+  const under=document.createElement("div");under.className="msg";under.style.color="#fff";under.style.minHeight="36px";
+  const actions=document.createElement("div");actions.className="replayRow";
+  const back=button("⬅ العودة للإنجاز","secondary");back.onclick=()=>{step=13;render()};
+  const again=button("🔁 ابدأ اللعبة من جديد","secondary");
+  actions.append(back,again);
+  wrap.append(title,hud,screen,under,actions);stageEl.appendChild(wrap);
+  audioIndex=14;playAudio(14);event("arcade_start",{payload:{game:"number4-retro"}});
+
+  function wave(){
+    busy=false;under.textContent="";
+    [...screen.querySelectorAll(".alien")].forEach(x=>x.remove());
+    const counts=shuffle([3,4,5]);
+    const lefts=["3%","35%","67%"];
+    counts.forEach((count,idx)=>{
+      const t=document.createElement("button");t.type="button";t.className="alien";t.style.left=lefts[idx];
+      t.setAttribute("aria-label","هدف فيه "+ar(count)+" نجوم");
+      t.innerHTML="<div>"+Array(count).fill("⭐").join(" ")+"</div>";
+      t.onclick=()=>{
+        if(busy)return;
+        if(count===4){
+          busy=true;score++;round++;retroTone(760,.10);setTimeout(()=>retroTone(980,.09),90);
+          t.classList.add("goodTarget","arcadeFlash");
+          scoreEl.textContent="الإصابات: "+ar(score)+" / ٤";
+          under.textContent="إصابة صحيحة! ⭐";
+          event("arcade_hit",{correct:true,payload:{score,round}});
+          if(score>=4){
+            setTimeout(win,520);
+          }else{
+            setTimeout(wave,620);
+          }
+        }else{
+          retroTone(180,.13,"sawtooth");under.textContent="ليس ٤. عدّ النجوم ثم حاول.";
+          t.classList.add("arcadeFlash");event("arcade_hit",{correct:false,payload:{chosen:count,score}});
+          setTimeout(()=>t.classList.remove("arcadeFlash"),450);
+        }
+      };
+      screen.appendChild(t);
+    });
+  }
+  function win(){
+    [...screen.querySelectorAll(".alien")].forEach(x=>x.remove());
+    ship.style.display="none";
+    screen.innerHTML='<div class="arcadeWin">⭐ ⭐ ⭐ ⭐<br>فزت!<br><span style="font-size:22px">عرفتَ العدد ٤</span></div>';
+    under.textContent="أربع إصابات صحيحة!";
+    event("arcade_complete",{correct:true,payload:{score:4}});
+    audioIndex=15;playAudio(15);
+  }
+  again.onclick=()=>{score=0;round=0;scoreEl.textContent="الإصابات: ٠ / ٤";ship.style.display="";screen.innerHTML="";screen.appendChild(ship);event("arcade_restart");wave()};
+  wave();
+}
 function doneStage(){
   head("أحسنت يا بطل!","أنهيت درس العدد ٤.");
   bar.style.width="100%";
   const d=document.createElement("div");d.className="done";d.innerHTML='<div class="bigicon">🎉 🏆 🎉</div><div class="hero" style="font-size:110px">٤</div><div>أعرف العدد ٤ ⭐<br>أعدّ ٤ أشياء.<br>أكوّن مجموعة من ٤.<br>أعرف أن بعد ٣ يأتي ٤.<br>أعرف الرمز ٤ وكلمة «أربعة».<br>وأكتب ٤ بإصبعي.</div><div class="small" style="margin-top:14px">إعداد: محمد غنام</div>';
+  const row=document.createElement("div");row.className="replayRow";
+  const replay=button("🔁 أعد الدرس","primary");replay.onclick=()=>restartLesson(replay);
+  const arcade=button("🎮 لعبة أركيد ٤","secondary");arcade.onclick=arcadeStage;
+  row.append(replay,arcade);d.appendChild(row);
   stageEl.appendChild(d);audioIndex=13;setTimeout(()=>playAudio(13),120);
 }
 $("listenBtn").onclick=()=>playAudio(audioIndex);
