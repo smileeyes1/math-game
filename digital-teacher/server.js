@@ -31,7 +31,7 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "blob:"],
       connectSrc: ["'self'"],
-      mediaSrc: ["'self'", "data:", "blob:"],
+      mediaSrc: ["'self'", "data:", "blob:", "https://resource2.heygen.ai"],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
       frameAncestors: ["'none'"]
