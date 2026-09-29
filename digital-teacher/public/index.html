@@ -509,7 +509,7 @@ function arcadeStage(){
   titleEl.textContent="حارس العدد ٤";
   instEl.textContent="أربع بوابات. أربع مهارات. مهمة واحدة: أتقن ٤.";
   msgEl.textContent="";msgEl.className="msg";bar.style.width="100%";stageEl.innerHTML="";
-  let world=0,streak=0,mistakes=0,paused=false,currentAudio=16,worldStarted=Date.now();
+  let world=0,streak=0,mistakes=0,paused=false,currentAudio=16,worldStarted=Date.now(),gameStartedAt=Date.now();
   const worldNames=["الاستعداد","نيازك ٤","طاقة الروبوتات","بوابة التسلسل","قائد المجرة"];
   const wrap=document.createElement("div");wrap.className="proGame";
   const top=document.createElement("div");top.className="proGameTop";
@@ -529,7 +529,7 @@ function arcadeStage(){
   wrap.append(top,gates,mission,arena,toast,controls);stageEl.appendChild(wrap);
 
   function setAudio(i,auto=false){currentAudio=i;audioIndex=i;if(auto)playAudio(i)}
-  function setWorld(n,label){world=n;worldEl.textContent=label;gateEls.forEach((g,i)=>g.classList.toggle("on",i<n));worldStarted=Date.now();toast.textContent="";toast.className="gameToast"}
+  function setWorld(n,label){world=n;worldEl.textContent=label;gateEls.forEach((g,i)=>g.classList.toggle("on",n>0&&i<n-1));worldStarted=Date.now();toast.textContent="";toast.className="gameToast"}
   function speakMsg(t,kind=""){toast.textContent=t;toast.className="gameToast "+kind}
   function burst(el){
     const r=el.getBoundingClientRect(),a=arena.getBoundingClientRect();
@@ -554,7 +554,7 @@ function arcadeStage(){
     setWorld(0,"استعداد");mission.textContent="مهمة حارس العدد ٤";arena.innerHTML="";
     const box=document.createElement("div");box.className="gameStart";
     box.innerHTML='<div><div class="gameStartBadge">🛡️٤</div><h2>مهمة حارس العدد ٤</h2><p>أربع بوابات قصيرة.<br>كل بوابة تثبت مهارة من الدرس.<br>لا توجد خسارة؛ إذا أخطأت سأساعدك.</p></div>';
-    const go=button("🚀 ابدأ المهمة","primary");go.onclick=()=>{event("pro_game_start",{payload:{version:"guardian4-v1"}});showWorld1()};
+    const go=button("🚀 ابدأ المهمة","primary");go.onclick=()=>{gameStartedAt=Date.now();event("pro_game_start",{payload:{version:"guardian4-v1"}});showWorld1()};
     box.appendChild(go);arena.appendChild(box);setAudio(16,true);
   }
   function showWorld1(){
@@ -654,7 +654,7 @@ function arcadeStage(){
     const again=button("🎮 العب من جديد","primary");again.onclick=()=>{streak=0;mistakes=0;score.textContent="⭐ ٠";startScreen()};
     const back=button("✅ العودة للإنجاز","secondary");back.onclick=()=>{step=13;render()};
     row.append(again,back);w.appendChild(row);arena.appendChild(w);speakMsg("أربع بوابات مكتملة!","good");
-    event("pro_game_complete",{correct:true,payload:{game:"guardian4-v1",mistakes,durationMs:Date.now()-worldStarted}});
+    event("pro_game_complete",{correct:true,payload:{game:"guardian4-v1",mistakes,durationMs:Date.now()-gameStartedAt}});
     setAudio(21,true);retroTone(660,.11);setTimeout(()=>retroTone(880,.11),120);setTimeout(()=>retroTone(1100,.18),260);
   }
 
