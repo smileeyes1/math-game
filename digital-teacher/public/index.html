@@ -77,22 +77,63 @@ h1{text-align:center;font-size:28px;margin:4px 0 7px}
  display:none;background:#fff1cf;color:#704d00;border-radius:12px;padding:8px 10px;text-align:center;font-size:13px;margin-bottom:8px
 }
 
-.arcadeWrap{background:#08152b;border:5px solid #1d3557;border-radius:22px;padding:12px;box-shadow:inset 0 0 0 3px #3d5a80,0 10px 26px #08152b44;color:#fff;text-align:center}
-.arcadeTitle{font-weight:900;font-size:24px;letter-spacing:.5px;margin-bottom:7px;color:#ffe36e;text-shadow:2px 2px 0 #8c5d00}
-.arcadeHud{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:6px 0 10px;font-weight:900}
-.arcadeScore{background:#10284b;border:2px solid #31527d;border-radius:12px;padding:6px 10px}
-.arcadeScreen{position:relative;height:270px;overflow:hidden;border:3px solid #31527d;border-radius:14px;background:
-linear-gradient(#071021,#0c1d38);box-shadow:inset 0 0 24px #000}
-.arcadeScreen:before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,#fff 1px,transparent 1.5px);background-size:37px 31px;opacity:.28;pointer-events:none}
-.alien{position:absolute;top:35px;width:30%;min-width:82px;max-width:150px;height:95px;border:3px solid #77e1ff;border-radius:12px;background:#12335a;color:#fff;font-size:23px;font-weight:900;display:grid;place-items:center;padding:6px;animation:arcadeFloat 1.15s ease-in-out infinite alternate;box-shadow:0 0 14px #45d9ff77}
-.alien:nth-child(2){animation-delay:.15s}.alien:nth-child(3){animation-delay:.3s}
-.alien.goodTarget{border-color:#ffd84c}
-.alien:active{transform:scale(.94)}
-@keyframes arcadeFloat{from{top:30px}to{top:145px}}
-.arcadeShip{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:46px;filter:drop-shadow(0 0 8px #6cf)}
-.arcadeFlash{animation:flash .24s 2}@keyframes flash{50%{filter:brightness(2)}}
-.arcadeWin{font-size:30px;line-height:1.7;padding:28px 8px;color:#ffe36e;font-weight:900}
 .replayRow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+.proGame{--gameSpeed:2.2s;background:linear-gradient(180deg,#07101f,#0c2340 58%,#0a172a);border:4px solid #264c70;border-radius:24px;padding:12px;box-shadow:inset 0 0 0 2px #4f7598,0 14px 34px #07101f55;color:#fff;text-align:center;overflow:hidden}
+.proGame.paused .moving{animation-play-state:paused!important}
+.proGameTop{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-bottom:8px}
+.proBrand{text-align:right;font-weight:900;color:#ffe36e;font-size:18px;text-shadow:0 2px 0 #795700}
+.proWorld{text-align:center;background:#102d4f;border:2px solid #345f87;border-radius:999px;padding:6px 11px;font-weight:900}
+.proScore{text-align:left;font-weight:900;color:#c9f7ff}
+.gatePath{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0 10px}
+.gateDot{height:12px;border-radius:999px;background:#1a3858;border:1px solid #315e86;box-shadow:inset 0 0 7px #0005}
+.gateDot.on{background:#58dd9d;box-shadow:0 0 13px #58dd9d99}
+.proMission{min-height:62px;display:grid;place-items:center;background:#0e2948;border:2px solid #315a81;border-radius:16px;padding:8px 12px;font-size:20px;font-weight:900;line-height:1.55;color:#f7fbff}
+.proArena{position:relative;min-height:330px;margin-top:10px;border:3px solid #2d5d88;border-radius:18px;overflow:hidden;background:
+radial-gradient(circle at 18% 22%,#ffffff 0 1px,transparent 1.5px),
+radial-gradient(circle at 72% 38%,#ffffff 0 1px,transparent 1.5px),
+radial-gradient(circle at 43% 73%,#ffffff 0 1px,transparent 1.5px),
+linear-gradient(180deg,#040b18,#0b1e36);background-size:73px 59px,91px 77px,111px 83px,auto;box-shadow:inset 0 0 30px #000}
+.proArena:after{content:"";position:absolute;inset:auto 0 0;height:52px;background:linear-gradient(0deg,#14365d,transparent);pointer-events:none}
+.gameToast{min-height:40px;font-size:17px;font-weight:900;padding:8px 6px;color:#dff8ff}
+.gameToast.good{color:#8ff0bd}.gameToast.try{color:#ffe68c}
+.gameControls{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
+.gameControls button{min-height:45px;border:2px solid #315c83;background:#102b4b;color:#fff;border-radius:13px;font-weight:900}
+.meteor{position:absolute;width:29%;min-width:86px;max-width:155px;min-height:98px;border:3px solid #6edcf5;background:linear-gradient(145deg,#173c62,#0e2746);color:#fff;border-radius:46% 54% 50% 50%;display:grid;place-items:center;padding:9px;font-size:21px;font-weight:900;box-shadow:0 0 18px #57d8ff66;animation:meteorDrift var(--gameSpeed) ease-in-out infinite alternate;z-index:2}
+.meteor:nth-child(2){animation-delay:-.7s}.meteor:nth-child(3){animation-delay:-1.2s}
+.meteor:active,.bossChoice:active,.seqPortal:active,.botCard:active{transform:scale(.95)}
+@keyframes meteorDrift{from{top:32px}to{top:188px}}
+.gameShip{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:48px;z-index:3;filter:drop-shadow(0 0 8px #62ddff)}
+.hitBurst{animation:hitBurst .4s ease}@keyframes hitBurst{50%{filter:brightness(2.2);box-shadow:0 0 30px #ffe36e}}
+.botGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;padding:18px 12px 8px;position:relative;z-index:2}
+.botCard{min-height:115px;border:3px solid #3d6689;background:#102947;color:#fff;border-radius:18px;font-size:38px;font-weight:900;display:grid;place-items:center;box-shadow:0 8px 16px #0004;transition:.2s}
+.botCard small{display:block;font-size:14px;color:#b9d6ec}
+.botCard.charged{border-color:#58dd9d;background:#103d3b;box-shadow:0 0 20px #58dd9d55}
+.botPulse{animation:botPulse 1s ease-in-out infinite alternate}@keyframes botPulse{to{transform:translateY(-5px)}}
+.energyMeter{display:flex;justify-content:center;gap:9px;margin:8px 0}
+.energyOrb{width:30px;height:30px;border-radius:50%;border:3px solid #51728f;background:#10243c;box-shadow:inset 0 0 8px #0008}
+.energyOrb.on{background:#58dd9d;border-color:#a7ffd0;box-shadow:0 0 14px #58dd9d}
+.seqTrack{position:relative;z-index:2;padding:26px 10px 8px}
+.seqLine{font-size:38px;font-weight:900;color:#fff;margin:12px 0 24px;text-shadow:0 2px 0 #000}
+.seqChoices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.seqPortal{min-height:100px;border:4px solid #6bdcff;background:radial-gradient(circle,#1d5578,#102a48);color:#fff;border-radius:50%;font-size:52px;font-weight:900;box-shadow:0 0 22px #5be0ff66;animation:portalPulse 1.1s ease-in-out infinite alternate}
+@keyframes portalPulse{to{box-shadow:0 0 34px #ffe36e99;border-color:#ffe36e}}
+.bossHead{position:relative;z-index:2;font-size:58px;padding-top:12px}
+.bossShield{display:flex;justify-content:center;gap:7px;margin:5px 0 11px}
+.shieldOrb{width:28px;height:28px;border-radius:7px;transform:rotate(45deg);background:#ffcc4b;box-shadow:0 0 12px #ffcc4b}
+.shieldOrb.off{background:#273e58;box-shadow:none}
+.bossGrid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:8px}
+.bossChoice{min-height:100px;border:3px solid #5c7fa0;border-radius:18px;background:#112c4c;color:#fff;font-size:26px;font-weight:900;padding:8px;box-shadow:0 7px 14px #0004}
+.bossChoice strong{font-size:48px;display:block}
+.gameStart{display:grid;place-items:center;min-height:320px;padding:18px;position:relative;z-index:2}
+.gameStartBadge{font-size:84px;filter:drop-shadow(0 0 14px #ffe36e)}
+.gameStart h2{margin:5px 0;font-size:29px;color:#ffe36e}.gameStart p{font-size:18px;line-height:1.7;color:#dceeff}
+.gameStart button{width:min(330px,92%);min-height:62px;font-size:21px}
+.gameWin{display:grid;place-items:center;min-height:320px;padding:16px;position:relative;z-index:2}
+.gameMedal{font-size:86px;filter:drop-shadow(0 0 16px #ffd84c)}
+.gameWin h2{color:#ffe36e;font-size:31px;margin:3px}.gameWin p{font-size:18px;line-height:1.8;color:#e6f5ff}
+.spark{position:absolute;width:9px;height:9px;border-radius:50%;background:#ffe36e;pointer-events:none;animation:spark .7s ease-out forwards;z-index:8}
+@keyframes spark{to{transform:translate(var(--x),var(--y)) scale(.1);opacity:0}}
+@media(prefers-reduced-motion:reduce){.moving,.botPulse,.seqPortal{animation:none!important}.proGame{--gameSpeed:999s}}
 @media(max-width:430px){.arcadeScreen{height:240px}.alien{font-size:20px;height:88px}.replayRow{grid-template-columns:1fr}}
 
 @media(max-width:430px){
@@ -139,6 +180,13 @@ const AUDIO=[
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=0550017f-2c6a-456c-a065-2bec34b3c354.wav",
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=c8bba1b3-2e2e-4c10-a41f-6cf76952693d.wav",
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=5a24a2f3-d2db-4279-a972-37913d68ba88.wav"
+,
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=22ed4abd-dd86-4bc4-ae76-4990d08b7bbe.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=58e07188-243a-4ab7-9182-9b2bfadf67b0.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=2c15d228-4252-49a0-b752-818bf8a5ed19.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=c44fe73d-f15b-4235-951e-b3e3ffbca600.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=4e1d97b4-49b1-40f4-a924-7812e295d7c9.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=c4857a79-799b-4413-ae15-044e1be2d87a.wav"
 ];
 let audioIndex=0;
 const narrator=new Audio();
@@ -458,68 +506,163 @@ async function restartLesson(btn){
 }
 function arcadeStage(){
   try{narrator.pause()}catch{}
-  titleEl.textContent="لعبة أركيد ٤";
-  instEl.textContent="اضرب الهدف الذي يحمل ٤ نجوم فقط.";
-  msgEl.textContent="";msgEl.className="msg";bar.style.width="100%";
-  stageEl.innerHTML="";
-  let score=0,round=0,busy=false;
-  const wrap=document.createElement("div");wrap.className="arcadeWrap";
-  const title=document.createElement("div");title.className="arcadeTitle";title.textContent="🚀 مهمة الصاروخ ٤";
-  const hud=document.createElement("div");hud.className="arcadeHud";
-  const scoreEl=document.createElement("div");scoreEl.className="arcadeScore";scoreEl.textContent="الإصابات: ٠ / ٤";
-  const help=document.createElement("div");help.className="small";help.style.color="#d8eaff";help.textContent="اضغط الهدف الصحيح";
-  hud.append(scoreEl,help);
-  const screen=document.createElement("div");screen.className="arcadeScreen";
-  const ship=document.createElement("div");ship.className="arcadeShip";ship.textContent="🚀";screen.appendChild(ship);
-  const under=document.createElement("div");under.className="msg";under.style.color="#fff";under.style.minHeight="36px";
-  const actions=document.createElement("div");actions.className="replayRow";
-  const back=button("⬅ العودة للإنجاز","secondary");back.onclick=()=>{step=13;render()};
-  const again=button("🔁 ابدأ اللعبة من جديد","secondary");
-  actions.append(back,again);
-  wrap.append(title,hud,screen,under,actions);stageEl.appendChild(wrap);
-  audioIndex=14;playAudio(14);event("arcade_start",{payload:{game:"number4-retro"}});
+  titleEl.textContent="حارس العدد ٤";
+  instEl.textContent="أربع بوابات. أربع مهارات. مهمة واحدة: أتقن ٤.";
+  msgEl.textContent="";msgEl.className="msg";bar.style.width="100%";stageEl.innerHTML="";
+  let world=0,streak=0,mistakes=0,paused=false,currentAudio=16,worldStarted=Date.now();
+  const worldNames=["الاستعداد","نيازك ٤","طاقة الروبوتات","بوابة التسلسل","قائد المجرة"];
+  const wrap=document.createElement("div");wrap.className="proGame";
+  const top=document.createElement("div");top.className="proGameTop";
+  const brand=document.createElement("div");brand.className="proBrand";brand.textContent="حارس ٤ • محمد غنام";
+  const worldEl=document.createElement("div");worldEl.className="proWorld";worldEl.textContent="استعداد";
+  const score=document.createElement("div");score.className="proScore";score.textContent="⭐ ٠";
+  top.append(brand,worldEl,score);
+  const gates=document.createElement("div");gates.className="gatePath";
+  const gateEls=[];
+  for(let i=0;i<4;i++){const x=document.createElement("div");x.className="gateDot";gateEls.push(x);gates.appendChild(x)}
+  const mission=document.createElement("div");mission.className="proMission";mission.textContent="جاهز لمهمة حارس العدد ٤؟";
+  const arena=document.createElement("div");arena.className="proArena";
+  const toast=document.createElement("div");toast.className="gameToast";
+  const controls=document.createElement("div");controls.className="gameControls";
+  const listen=button("🔊 اسمع");const pause=button("⏸ إيقاف");const full=button("⛶ ملء الشاشة");const exit=button("↩ خروج");
+  controls.append(listen,pause,full,exit);
+  wrap.append(top,gates,mission,arena,toast,controls);stageEl.appendChild(wrap);
 
-  function wave(){
-    busy=false;under.textContent="";
-    [...screen.querySelectorAll(".alien")].forEach(x=>x.remove());
-    const counts=shuffle([3,4,5]);
-    const lefts=["3%","35%","67%"];
-    counts.forEach((count,idx)=>{
-      const t=document.createElement("button");t.type="button";t.className="alien";t.style.left=lefts[idx];
-      t.setAttribute("aria-label","هدف فيه "+ar(count)+" نجوم");
-      t.innerHTML="<div>"+Array(count).fill("⭐").join(" ")+"</div>";
-      t.onclick=()=>{
-        if(busy)return;
-        if(count===4){
-          busy=true;score++;round++;retroTone(760,.10);setTimeout(()=>retroTone(980,.09),90);
-          t.classList.add("goodTarget","arcadeFlash");
-          scoreEl.textContent="الإصابات: "+ar(score)+" / ٤";
-          under.textContent="إصابة صحيحة! ⭐";
-          event("arcade_hit",{correct:true,payload:{score,round}});
-          if(score>=4){
-            setTimeout(win,520);
-          }else{
-            setTimeout(wave,620);
-          }
-        }else{
-          retroTone(180,.13,"sawtooth");under.textContent="ليس ٤. عدّ النجوم ثم حاول.";
-          t.classList.add("arcadeFlash");event("arcade_hit",{correct:false,payload:{chosen:count,score}});
-          setTimeout(()=>t.classList.remove("arcadeFlash"),450);
-        }
+  function setAudio(i,auto=false){currentAudio=i;audioIndex=i;if(auto)playAudio(i)}
+  function setWorld(n,label){world=n;worldEl.textContent=label;gateEls.forEach((g,i)=>g.classList.toggle("on",i<n));worldStarted=Date.now();toast.textContent="";toast.className="gameToast"}
+  function speakMsg(t,kind=""){toast.textContent=t;toast.className="gameToast "+kind}
+  function burst(el){
+    const r=el.getBoundingClientRect(),a=arena.getBoundingClientRect();
+    for(let i=0;i<10;i++){const s=document.createElement("span");s.className="spark";s.style.left=(r.left-a.left+r.width/2)+"px";s.style.top=(r.top-a.top+r.height/2)+"px";const ang=(Math.PI*2*i)/10,dist=40+Math.random()*45;s.style.setProperty("--x",Math.cos(ang)*dist+"px");s.style.setProperty("--y",Math.sin(ang)*dist+"px");arena.appendChild(s);setTimeout(()=>s.remove(),760)}
+  }
+  function correct(el,payload={}){
+    streak++;retroTone(760,.08);setTimeout(()=>retroTone(1040,.08),80);try{navigator.vibrate&&navigator.vibrate(22)}catch{}
+    if(el){el.classList.add("hitBurst");burst(el)}
+    event("pro_game_answer",{correct:true,payload:{world,streak,mistakes,responseMs:Date.now()-worldStarted,...payload}});
+  }
+  function wrong(el,payload={}){
+    streak=0;mistakes++;retroTone(165,.12,"sawtooth");try{navigator.vibrate&&navigator.vibrate([30,35,30])}catch{}
+    if(el){el.classList.add("hitBurst");setTimeout(()=>el.classList.remove("hitBurst"),420)}
+    event("pro_game_answer",{correct:false,payload:{world,mistakes,responseMs:Date.now()-worldStarted,...payload}});
+  }
+  function adaptiveSpeed(){
+    if(mistakes>=3)return "3.3s";
+    if(streak>=3)return "1.75s";
+    return "2.25s";
+  }
+  function startScreen(){
+    setWorld(0,"استعداد");mission.textContent="مهمة حارس العدد ٤";arena.innerHTML="";
+    const box=document.createElement("div");box.className="gameStart";
+    box.innerHTML='<div><div class="gameStartBadge">🛡️٤</div><h2>مهمة حارس العدد ٤</h2><p>أربع بوابات قصيرة.<br>كل بوابة تثبت مهارة من الدرس.<br>لا توجد خسارة؛ إذا أخطأت سأساعدك.</p></div>';
+    const go=button("🚀 ابدأ المهمة","primary");go.onclick=()=>{event("pro_game_start",{payload:{version:"guardian4-v1"}});showWorld1()};
+    box.appendChild(go);arena.appendChild(box);setAudio(16,true);
+  }
+  function showWorld1(){
+    setWorld(1,"البوابة ١");mission.textContent="اضرب النيزك الذي يحمل ٤ نجوم فقط.";arena.innerHTML="";
+    const ship=document.createElement("div");ship.className="gameShip";ship.textContent="🚀";arena.appendChild(ship);
+    let hits=0,busy=false;
+    setAudio(17,true);
+    function wave(){
+      if(paused)return;busy=false;worldStarted=Date.now();[...arena.querySelectorAll(".meteor")].forEach(x=>x.remove());
+      wrap.style.setProperty("--gameSpeed",adaptiveSpeed());
+      const vals=shuffle([3,4,5]),lefts=["3%","35.5%","68%"];
+      vals.forEach((n,i)=>{
+        const t=document.createElement("button");t.type="button";t.className="meteor moving";t.style.left=lefts[i];
+        t.setAttribute("aria-label","نيزك فيه "+ar(n)+" نجوم");
+        t.innerHTML="<div>"+Array(n).fill("⭐").join(" ")+"</div>";
+        t.onclick=()=>{
+          if(paused||busy)return;
+          if(n===4){busy=true;hits++;correct(t,{mission:"quantity",chosen:n,hit:hits});score.textContent="⭐ "+ar(hits);
+            speakMsg("إصابة صحيحة! "+ar(hits)+" من ٤","good");
+            if(hits>=4){gateEls[0].classList.add("on");setTimeout(showWorld2,650)}else setTimeout(wave,620);
+          }else{wrong(t,{mission:"quantity",chosen:n});speakMsg(mistakes>=2?"ليس ٤. المس النجوم واحدة واحدة أثناء العد.":"ليس ٤. عدّ النجوم ثم حاول.","try");wrap.style.setProperty("--gameSpeed",adaptiveSpeed())}
+        };
+        arena.appendChild(t);
+      });
+    }
+    wave();
+  }
+  function showWorld2(){
+    setWorld(2,"البوابة ٢");mission.textContent="أعطِ كل روبوت طاقة واحدة حتى تشحن ٤ روبوتات.";arena.innerHTML="";score.textContent="⚡ ٠ / ٤";
+    const meter=document.createElement("div");meter.className="energyMeter";const orbs=[];
+    for(let i=0;i<4;i++){const o=document.createElement("span");o.className="energyOrb";orbs.push(o);meter.appendChild(o)}
+    const grid=document.createElement("div");grid.className="botGrid";let charged=0;
+    for(let i=0;i<4;i++){
+      const b=document.createElement("button");b.type="button";b.className="botCard botPulse";b.innerHTML="🤖<small>يحتاج طاقة</small>";
+      b.onclick=()=>{
+        if(paused)return;
+        if(b.classList.contains("charged")){wrong(b,{mission:"one_to_one",repeat:true});speakMsg("هذا الروبوت أخذ طاقته. اختر روبوتًا آخر.","try");return}
+        b.classList.add("charged");b.classList.remove("botPulse");b.innerHTML="🤖⚡<small>جاهز</small>";charged++;orbs[charged-1].classList.add("on");
+        correct(b,{mission:"one_to_one",charged});score.textContent="⚡ "+ar(charged)+" / ٤";speakMsg("ممتاز! روبوت واحد، طاقة واحدة.","good");
+        if(charged===4){gateEls[1].classList.add("on");setTimeout(showWorld3,700)}
       };
-      screen.appendChild(t);
+      grid.appendChild(b);
+    }
+    arena.append(meter,grid);setAudio(18,true);worldStarted=Date.now();
+  }
+  function showWorld3(){
+    setWorld(3,"البوابة ٣");mission.textContent="أكمل المسار: ١، ٢، ٣، ثم ماذا؟";arena.innerHTML="";score.textContent="🛤️ ١ ٢ ٣ □";
+    const box=document.createElement("div");box.className="seqTrack";
+    const line=document.createElement("div");line.className="seqLine";line.textContent="١  ←  ٢  ←  ٣  ←  □";
+    const opts=document.createElement("div");opts.className="seqChoices";
+    shuffle(["٢","٤","٥"]).forEach(v=>{
+      const b=document.createElement("button");b.type="button";b.className="seqPortal moving";b.textContent=v;
+      b.onclick=()=>{
+        if(paused)return;
+        if(v==="٤"){correct(b,{mission:"sequence",chosen:v});speakMsg("صحيح! بعد ٣ يأتي ٤.","good");score.textContent="🛤️ ١ ٢ ٣ ٤";gateEls[2].classList.add("on");setTimeout(showBoss,720)}
+        else{wrong(b,{mission:"sequence",chosen:v});speakMsg("ابدأ من ١ وعدّ: ١، ٢، ٣، ...","try")}
+      };
+      opts.appendChild(b);
     });
+    box.append(line,opts);arena.appendChild(box);setAudio(19,true);worldStarted=Date.now();
   }
-  function win(){
-    [...screen.querySelectorAll(".alien")].forEach(x=>x.remove());
-    ship.style.display="none";
-    screen.innerHTML='<div class="arcadeWin">⭐ ⭐ ⭐ ⭐<br>فزت!<br><span style="font-size:22px">عرفتَ العدد ٤</span></div>';
-    under.textContent="أربع إصابات صحيحة!";
-    event("arcade_complete",{correct:true,payload:{score:4}});
-    audioIndex=15;playAudio(15);
+  function showBoss(){
+    setWorld(4,"المواجهة");mission.textContent="اعثر على ٤ مهما تغيّر شكله.";arena.innerHTML="";score.textContent="🛡️ ٤";
+    const head=document.createElement("div");head.className="bossHead";head.textContent="👾";
+    const shield=document.createElement("div");shield.className="bossShield";const shieldEls=[];
+    for(let i=0;i<4;i++){const s=document.createElement("span");s.className="shieldOrb";shieldEls.push(s);shield.appendChild(s)}
+    const grid=document.createElement("div");grid.className="bossGrid";arena.append(head,shield,grid);
+    const rounds=[
+      {kind:"quantity",q:"أين توجد ٤؟",opts:[{v:3,h:"● ● ●"},{v:4,h:"● ● ● ●"},{v:5,h:"● ● ● ● ●"}],answer:4},
+      {kind:"symbol",q:"أين رمز أربعة؟",opts:[{v:"٣",h:"<strong>٣</strong>"},{v:"٤",h:"<strong>٤</strong>"},{v:"٥",h:"<strong>٥</strong>"}],answer:"٤"},
+      {kind:"name",q:"ما اسم ٤؟",opts:[{v:"ثلاثة",h:"ثلاثة"},{v:"أربعة",h:"أربعة"},{v:"خمسة",h:"خمسة"}],answer:"أربعة"},
+      {kind:"transfer",q:"أي مجموعة ما زالت ٤؟",opts:[{v:4,h:"🍎 🍎 🍎 🍎"},{v:5,h:"⚽ ⚽ ⚽ ⚽ ⚽"},{v:3,h:"🐟 🐟 🐟"}],answer:4}
+    ];
+    let r=0;setAudio(20,true);
+    function round(){
+      worldStarted=Date.now();grid.innerHTML="";mission.textContent=rounds[r].q;const spec=rounds[r];
+      shuffle(spec.opts).forEach(o=>{
+        const b=document.createElement("button");b.type="button";b.className="bossChoice";b.innerHTML=o.h;
+        b.onclick=()=>{
+          if(paused)return;
+          if(o.v===spec.answer){correct(b,{mission:"boss_"+spec.kind,round:r+1});shieldEls[r].classList.add("off");r++;score.textContent="🛡️ "+ar(4-r);
+            speakMsg("أصبت الدرع! بقي "+ar(4-r)+".","good");
+            if(r>=4){gateEls[3].classList.add("on");setTimeout(winGame,720)}else setTimeout(round,620);
+          }else{wrong(b,{mission:"boss_"+spec.kind,round:r+1,chosen:o.v});speakMsg(mistakes>=3?"فكّر في معنى ٤: أربع أشياء، الرمز ٤، والاسم أربعة.":"جرّب مرة أخرى. ابحث عن ٤.","try")}
+        };
+        grid.appendChild(b);
+      });
+    }
+    round();
   }
-  again.onclick=()=>{score=0;round=0;scoreEl.textContent="الإصابات: ٠ / ٤";ship.style.display="";screen.innerHTML="";screen.appendChild(ship);event("arcade_restart");wave()};
-  wave();
+  function winGame(){
+    arena.innerHTML="";mission.textContent="اكتملت المهمة بنجاح";score.textContent="🏆 ٤ / ٤";
+    localStorage.setItem("dt_game_badge_"+lessonId,"guardian4");
+    const w=document.createElement("div");w.className="gameWin";
+    w.innerHTML='<div><div class="gameMedal">🏅</div><h2>وسام حارس ٤</h2><p>أتقنت ٤ في الكمية، والمطابقة، والتسلسل، والرمز، والاسم.<br><b>المعلّم محمد غنام</b></p></div>';
+    const row=document.createElement("div");row.className="replayRow";
+    const again=button("🎮 العب من جديد","primary");again.onclick=()=>{streak=0;mistakes=0;score.textContent="⭐ ٠";startScreen()};
+    const back=button("✅ العودة للإنجاز","secondary");back.onclick=()=>{step=13;render()};
+    row.append(again,back);w.appendChild(row);arena.appendChild(w);speakMsg("أربع بوابات مكتملة!","good");
+    event("pro_game_complete",{correct:true,payload:{game:"guardian4-v1",mistakes,durationMs:Date.now()-worldStarted}});
+    setAudio(21,true);retroTone(660,.11);setTimeout(()=>retroTone(880,.11),120);setTimeout(()=>retroTone(1100,.18),260);
+  }
+
+  listen.onclick=()=>playAudio(currentAudio);
+  pause.onclick=()=>{paused=!paused;wrap.classList.toggle("paused",paused);pause.textContent=paused?"▶ متابعة":"⏸ إيقاف";speakMsg(paused?"اللعبة متوقفة. اضغط متابعة عندما تكون جاهزًا.":"هيا نكمل!","")};
+  full.onclick=async()=>{try{if(!document.fullscreenElement&&wrap.requestFullscreen)await wrap.requestFullscreen();else if(document.fullscreenElement)await document.exitFullscreen()}catch{}};
+  exit.onclick=()=>{try{narrator.pause()}catch{};event("pro_game_exit",{payload:{world,mistakes}});step=13;render()};
+  startScreen();
 }
 function doneStage(){
   head("أحسنت يا بطل!","أنهيت درس العدد ٤.");
@@ -527,7 +670,7 @@ function doneStage(){
   const d=document.createElement("div");d.className="done";d.innerHTML='<div class="bigicon">🎉 🏆 🎉</div><div class="hero" style="font-size:110px">٤</div><div>أعرف العدد ٤ ⭐<br>أعدّ ٤ أشياء.<br>أكوّن مجموعة من ٤.<br>أعرف أن بعد ٣ يأتي ٤.<br>أعرف الرمز ٤ وكلمة «أربعة».<br>وأكتب ٤ بإصبعي.</div><div class="small" style="margin-top:14px">إعداد: محمد غنام</div>';
   const row=document.createElement("div");row.className="replayRow";
   const replay=button("🔁 أعد الدرس","primary");replay.onclick=()=>restartLesson(replay);
-  const arcade=button("🎮 لعبة أركيد ٤","secondary");arcade.onclick=arcadeStage;
+  const arcade=button("🎮 لعبة حارس ٤","secondary");arcade.onclick=arcadeStage;
   row.append(replay,arcade);d.appendChild(row);
   stageEl.appendChild(d);
 }
