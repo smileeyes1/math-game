@@ -109,7 +109,7 @@ const AUDIO=[
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=86c6733d-5528-4896-8380-d71ae870f542.wav",
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=1ed4997b-e269-435b-bfc7-931ffe22eb64.wav",
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=20ea42b7-7f5b-491e-9222-744f5fed570d.wav",
-"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=97b4a2d5-dde3-4e81-9a46-37f454be0d91.wav",
+"https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=17b3a135-b7eb-4315-8401-7afdd67ff6fc.wav",
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=dd9e5b56-075e-4f08-b251-5c1742e1c593.wav",
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=b42f8e81-265e-4974-a58c-ca127d0c7d07.wav",
 "https://resource2.heygen.ai/text_to_speech/2e59004d26bd438bb05243aa25431ea8/2d432723a02444acb48e28ada714cc43/id=f1890635-baef-4620-be37-9a976ae577f1.wav",
@@ -288,15 +288,24 @@ function matchStage(){
   stageEl.append(slots,g);
 }
 function pictureStage(){
-  head("اكتشف العدد","المس كل مجموعة فيها ٤ أشياء فقط.");
-  const data=[{t:"⚽ ⚽ ⚽ ⚽",o:1},{t:"🐟 🐟 🐟",o:0},{t:"🌼 🌼 🌼 🌼",o:1},{t:"🚗 🚗",o:0},{t:"🧁 🧁 🧁 🧁",o:1},{t:"🎈 🎈 🎈 🎈 🎈",o:0}];
+  head("أين توجد ٤؟","اختر البطاقة التي فيها ٤ أشياء فقط.");
   const g=document.createElement("div");g.className="grid3";
-  data.forEach((x,i)=>{const b=button(x.t);b.onclick=()=>{if(selected.has(i)){selected.delete(i);b.classList.remove("good")}else{selected.add(i);b.classList.add("good")}};g.appendChild(b)});
-  const check=button("تحقّق","primary");check.onclick=()=>{
-    const yes=selected.size===3&&[0,2,4].every(i=>selected.has(i));
-    yes?next("quantity","صحيح! الأشياء تغيّرت، لكن العدد بقي ٤."):markWrong(null,"اختر فقط المجموعات التي تحتوي ٤ أشياء.");
-  };
-  stageEl.append(g,check);
+  const cards=shuffle([
+    {count:3,items:["🌼","🌼","🌼"]},
+    {count:4,items:["🌼","🌼","🌼","🌼"]},
+    {count:5,items:["🌼","🌼","🌼","🌼","🌼"]}
+  ]);
+  cards.forEach(x=>{
+    const b=button("","choice");
+    b.setAttribute("aria-label","مجموعة فيها "+ar(x.count)+" أشياء");
+    b.innerHTML='<div style="font-size:42px;line-height:1.45">'+x.items.join(" ")+'</div>';
+    b.onclick=()=>{
+      if(x.count===4)next("quantity","صحيح! هذه مجموعة فيها ٤.");
+      else markWrong(b,"عدّ الزهور ببطء. نريد ٤ فقط.");
+    };
+    g.appendChild(b);
+  });
+  stageEl.appendChild(g);
 }
 function compressImage(file,max=720,quality=.72){
  return new Promise((resolve,reject)=>{
