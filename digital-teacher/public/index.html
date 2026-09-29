@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f7fbff">
-<title>المعلّم الرقمي محمد غنام</title>
+<title>المعلّم الرقمي محمد غنام</title><!-- مصمم لطفل بعمر ٧ سنوات: مهمة واحدة في الشاشة، لمس مباشر، تعليمات قصيرة -->
 <style>
 :root{
   --bg:#eef8ff;--card:#fff;--ink:#17324a;--muted:#61788d;--line:#dbe6ef;
@@ -18,7 +18,7 @@ linear-gradient(180deg,#eaf7ff,#fffaf0 78%);color:var(--ink);
 font-family:Tahoma,Arial,"Noto Sans Arabic",sans-serif}
 body{direction:rtl;text-align:right}
 button,input{font:inherit}
-button{cursor:pointer;touch-action:manipulation}
+button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}button:focus-visible{outline:4px solid #86bdf0;outline-offset:2px}button:disabled{opacity:.7}
 .shell{max-width:760px;margin:auto;padding:10px 10px max(24px,env(safe-area-inset-bottom))}
 .teacher{
  display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:8px
@@ -35,7 +35,7 @@ button{cursor:pointer;touch-action:manipulation}
 .progress{height:11px;border-radius:99px;background:#e9eef3;overflow:hidden;margin-bottom:14px}
 .progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffbd32,#ffe078);transition:.25s}
 h1{text-align:center;font-size:28px;margin:4px 0 7px}
-.instruction{text-align:center;font-size:21px;line-height:1.8;font-weight:900;margin:0 0 13px}
+.instruction{text-align:center;font-size:22px;line-height:1.75;font-weight:900;margin:0 0 13px;max-width:620px;margin-inline:auto}
 .stage{min-height:320px}
 .msg{min-height:42px;text-align:center;font-size:18px;font-weight:900;line-height:1.6;margin-top:10px}
 .msg.ok{color:var(--green)}.msg.no{color:var(--red)}
@@ -47,7 +47,7 @@ h1{text-align:center;font-size:28px;margin:4px 0 7px}
  min-height:82px;border:3px solid var(--line);border-radius:20px;background:#fff;color:var(--ink);
  padding:10px;font-weight:900
 }
-.choice{font-size:30px}.item{font-size:40px}
+.choice{font-size:32px}.item{font-size:44px}.countBadge{display:inline-grid;place-items:center;min-width:58px;height:58px;border-radius:18px;background:#17324a;color:#fff;font-size:34px;font-weight:900;margin:8px auto}.rabbits{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}.rabbitSlot{border:2px solid #dbe6ef;border-radius:18px;padding:10px;text-align:center;font-size:36px;background:#fbfdff}.rabbitSlot.fed{background:#ecfbf3;border-color:#50b77a}.tapnote{text-align:center;font-size:16px;color:#61788d;margin:7px 0 10px}
 .primary{width:100%;margin-top:12px;background:linear-gradient(#ffe584,#ffc747);border-color:#efbe43;color:#684400;font-size:20px}
 .secondary{background:var(--blue-soft);border-color:#c9dcfb;color:#245c9c;font-size:17px}
 .good{border-color:#50b77a!important;background:var(--green-soft)!important}
@@ -86,7 +86,7 @@ h1{text-align:center;font-size:28px;margin:4px 0 7px}
 <div class="shell">
   <div class="teacher">
     <div class="teacher-badge">م غ</div>
-    <div><div class="name">المعلّم الرقمي محمد غنام</div><div class="sub">سأرافقك خطوة خطوة</div></div><button id="listenBtn" class="listen" type="button">🔊 اسمع</button>
+    <div><div class="name">المعلّم الرقمي محمد غنام</div><div class="sub">أنا معك خطوة خطوة</div></div><button id="listenBtn" class="listen" type="button">🔊 اسمع</button>
   </div>
   <div id="offline" class="offline">لا يوجد اتصال الآن. يمكنك المتابعة، وسأرسل تقدمك عند عودة الإنترنت.</div>
   <main class="card">
@@ -244,27 +244,51 @@ function countStage(){
   }stageEl.appendChild(g);
 }
 function makeStage(){
-  head("كوِّن ٤","ضع ٤ بلورات في السلة.");
-  const pool=document.createElement("div");pool.className="pool";const basket=document.createElement("div");basket.className="basket";const inside=new Set();
-  function draw(){pool.innerHTML="";basket.innerHTML="";
-    for(let i=0;i<6;i++){const b=button("💎","item");
-      if(inside.has(i)){b.onclick=()=>{inside.delete(i);draw()};basket.appendChild(b)}
-      else{b.onclick=()=>{inside.add(i);draw()};pool.appendChild(b)}
-    }
-  }draw();
-  const check=button("تحقّق","primary");check.onclick=()=>inside.size===4?next("make","رائع! صنعتَ مجموعة فيها ٤."):markWrong(null,"اجعل في السلة ٤ بلورات فقط.");
-  stageEl.append(pool,basket,check);
+  head("كوِّن ٤","المس ٤ بلورات. سأضعها في السلة لك.");
+  const counter=document.createElement("div");counter.className="center";
+  counter.innerHTML='<div class="countBadge">٠</div><div class="tapnote">المس البلورات واحدة واحدة</div>';
+  const pool=document.createElement("div");pool.className="grid3 scene";
+  const basket=document.createElement("div");basket.className="basket";
+  const chosen=new Set();
+  const badge=()=>counter.querySelector(".countBadge");
+  for(let i=0;i<6;i++){
+    const b=button("💎","item");
+    b.onclick=()=>{
+      if(chosen.has(i)||locked)return;
+      if(chosen.size>=4){markWrong(b,"يكفي ٤. أحسنت العد.");return}
+      chosen.add(i);b.disabled=true;b.classList.add("good");
+      const gem=document.createElement("span");gem.textContent="💎";gem.style.fontSize="38px";basket.appendChild(gem);
+      badge().textContent=ar(chosen.size);
+      event("object_selected",{payload:{kind:"crystal",count:chosen.size}});
+      if(chosen.size===4)setTimeout(()=>next("make","ممتاز! كوّنتَ مجموعة من ٤."),280);
+    };
+    pool.appendChild(b);
+  }
+  stageEl.append(counter,pool,basket);
 }
 function matchStage(){
-  head("واحد لكل واحد","لدينا ٤ أرانب. اختر ٤ جزرات، جزرة لكل أرنب.");
-  const rabbits=document.createElement("div");rabbits.className="center bigicon";rabbits.textContent="🐰 🐰 🐰 🐰";
+  head("واحد لكل واحد","أعطِ كل أرنب جزرة واحدة.");
+  const slots=document.createElement("div");slots.className="rabbits";
+  const rabbitEls=[];
+  for(let i=0;i<4;i++){const d=document.createElement("div");d.className="rabbitSlot";d.innerHTML="🐰<br><span>□</span>";rabbitEls.push(d);slots.appendChild(d)}
   const g=document.createElement("div");g.className="grid3";
-  for(let i=0;i<6;i++){const b=button("🥕","item");b.onclick=()=>{if(selected.has(i)){selected.delete(i);b.classList.remove("good")}else{selected.add(i);b.classList.add("good")}};g.appendChild(b)}
-  const check=button("تحقّق","primary");check.onclick=()=>selected.size===4?next("match","أحسنت! ٤ أرانب أخذت ٤ جزرات."):markWrong(null,"كل أرنب يحتاج جزرة واحدة. كم أرنبًا ترى؟");
-  stageEl.append(rabbits,g,check);
+  let fed=0;
+  for(let i=0;i<6;i++){
+    const b=button("🥕","item");
+    b.onclick=()=>{
+      if(b.disabled||locked)return;
+      if(fed>=4){markWrong(b,"كل الأرانب أخذت جزرتها.");return}
+      b.disabled=true;b.classList.add("good");
+      rabbitEls[fed].classList.add("fed");rabbitEls[fed].innerHTML="🐰<br>🥕";fed++;
+      event("object_selected",{payload:{kind:"carrot",count:fed}});
+      if(fed===4)setTimeout(()=>next("match","رائع! ٤ أرانب أخذت ٤ جزرات."),300);
+    };
+    g.appendChild(b);
+  }
+  stageEl.append(slots,g);
 }
 function pictureStage(){
-  head("اكتشف العدد","اختر كل مجموعة فيها ٤ أشياء.");
+  head("اكتشف العدد","المس كل مجموعة فيها ٤ أشياء فقط.");
   const data=[{t:"⚽ ⚽ ⚽ ⚽",o:1},{t:"🐟 🐟 🐟",o:0},{t:"🌼 🌼 🌼 🌼",o:1},{t:"🚗 🚗",o:0},{t:"🧁 🧁 🧁 🧁",o:1},{t:"🎈 🎈 🎈 🎈 🎈",o:0}];
   const g=document.createElement("div");g.className="grid3";
   data.forEach((x,i)=>{const b=button(x.t);b.onclick=()=>{if(selected.has(i)){selected.delete(i);b.classList.remove("good")}else{selected.add(i);b.classList.add("good")}};g.appendChild(b)});
@@ -289,21 +313,21 @@ async function uploadEvidence(dataUrl,stage,caption){
   return true
 }
 function realWorldStage(){
-  head("مهمة من حولك","أحضر ٤ أقلام أو ٤ أشياء صغيرة، وضعها أمامك.");
+  head("مهمة حقيقية","أحضر ٤ أقلام أو ٤ أشياء صغيرة، وضعها أمامك.");
   const box=document.createElement("div");box.className="photo-box";
-  box.innerHTML='<div class="camera">📷</div><div style="font-size:20px;font-weight:900">هل تريد أن تري المعلم ما فعلت؟</div><div class="privacy">إذا أرفقت صورة، ستصل إلى المعلم محمد غنام للمراجعة فقط. لن تعمل الكاميرا وحدها، ويمكنك متابعة الدرس دون صورة.</div>';
+  box.innerHTML='<div class="camera">🖍️ 🖍️ 🖍️ 🖍️</div><div style="font-size:20px;font-weight:900">ضع ٤ أشياء أمامك</div><div class="small">إذا أحببت، يمكنك إرسال صورة للأشياء فقط.</div><div class="privacy">إذا أردت، صوّر الأشياء فقط ولا تصوّر وجهك. ستصل الصورة إلى المعلم محمد غنام للمراجعة. يمكنك المتابعة دون صورة.</div>';
   const input=document.createElement("input");input.type="file";input.accept="image/jpeg,image/png,image/webp";input.setAttribute("capture","environment");input.style.display="none";
   const preview=document.createElement("img");preview.className="photo-preview";
   let dataUrl="";
-  const choose=button("📷 أرفق صورة","secondary");choose.onclick=()=>input.click();
+  const choose=button("📷 صورة اختيارية","secondary");choose.onclick=()=>input.click();
   input.onchange=async()=>{const f=input.files&&input.files[0];if(!f)return;if(f.size>8*1024*1024){no("الصورة كبيرة جدًا. اختر صورة أصغر.");return}
     try{dataUrl=await compressImage(f);preview.src=dataUrl;preview.style.display="block";ok("الصورة جاهزة للإرسال.");}catch{no("تعذر تجهيز الصورة. يمكنك المتابعة دونها.")}
   };
-  const send=button("أرسل وأكمل","primary");send.onclick=async()=>{
+  const send=button("أرسل الصورة وأكمل","secondary");send.onclick=async()=>{
     if(dataUrl){send.disabled=true;const sent=await uploadEvidence(dataUrl,"realworld","مهمة: ٤ أشياء من البيئة");event("real_world_task",{correct:null,payload:{evidence:sent?"sent":"queued"}});send.disabled=false}
     next(null,dataUrl?"تم إرسال دليلك للمعلم. أحسنت!":"أحسنت على تنفيذ المهمة.");
   };
-  const skip=button("نفّذت المهمة وأكمل دون صورة","secondary");skip.onclick=()=>{event("real_world_task",{payload:{evidence:"not_provided"}});next(null,"ممتاز. نكمل الآن.")};
+  const skip=button("✅ فعلتُها — أكمل","primary");skip.onclick=()=>{event("real_world_task",{payload:{evidence:"not_provided"}});next(null,"ممتاز. نكمل الآن.")};
   const actions=document.createElement("div");actions.className="actions";actions.append(choose,skip);
   box.append(input,preview,actions,send);stageEl.appendChild(box);
 }
@@ -340,8 +364,8 @@ function nameStage(){
   stageEl.append(h,g);
 }
 function traceStage(){
-  head("اكتب ٤","تتبّع شكل ٤ بإصبعك، ثم اضغط «أنهيت».");
-  const note=document.createElement("div");note.className="small";note.textContent="سيُحفظ رسمك للمعلم كدليل تعلم عند الضغط على «أنهيت».";
+  head("اكتب ٤","تتبّع شكل ٤ بإصبعك ببطء.");
+  const note=document.createElement("div");note.className="small";note.textContent="ارسم فوق الشكل الرمادي. سيصل رسمك إلى المعلم عند الضغط على «أنهيت».";
   const box=document.createElement("div");box.className="trace";const guide=document.createElement("div");guide.className="guide";guide.textContent="٤";
   const canvas=document.createElement("canvas");canvas.width=700;canvas.height=420;box.append(guide,canvas);
   const ctx=canvas.getContext("2d");ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#7651d4";ctx.lineWidth=16;
@@ -377,7 +401,7 @@ function finalStage(){
 function doneStage(){
   head("أحسنت يا بطل!","أنهيت درس العدد ٤.");
   bar.style.width="100%";
-  const d=document.createElement("div");d.className="done";d.innerHTML='<div class="bigicon">🎉 🏆 🎉</div><div class="hero" style="font-size:110px">٤</div><div>أستطيع أن أعدّ ٤ أشياء.<br>أكوّن مجموعة من ٤.<br>أطابق واحدًا لواحد.<br>أعرف أن بعد ٣ يأتي ٤.<br>أتعرف إلى الرمز ٤ وكلمة «أربعة».<br>وتدرّبت على كتابة ٤.</div><div class="small" style="margin-top:14px">إعداد: محمد غنام</div>';
+  const d=document.createElement("div");d.className="done";d.innerHTML='<div class="bigicon">🎉 🏆 🎉</div><div class="hero" style="font-size:110px">٤</div><div>أعرف العدد ٤ ⭐<br>أعدّ ٤ أشياء.<br>أكوّن مجموعة من ٤.<br>أعرف أن بعد ٣ يأتي ٤.<br>أعرف الرمز ٤ وكلمة «أربعة».<br>وأكتب ٤ بإصبعي.</div><div class="small" style="margin-top:14px">إعداد: محمد غنام</div>';
   stageEl.appendChild(d);audioIndex=13;setTimeout(()=>playAudio(13),120);
 }
 $("listenBtn").onclick=()=>playAudio(audioIndex);
