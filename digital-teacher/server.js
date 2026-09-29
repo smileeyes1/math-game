@@ -204,10 +204,10 @@ app.post("/api/events", async (req, res) => {
       progress=COALESCE($3,progress),
       mastery=COALESCE($4::jsonb,mastery),
       status=$5,
-      completed_at=CASE WHEN $5='completed' THEN COALESCE(completed_at,now()) ELSE completed_at END,
+      completed_at=CASE WHEN $6 THEN COALESCE(completed_at,now()) ELSE completed_at END,
       updated_at=now()
      WHERE id=$1`,
-    [sessionId, stage, progress, mastery ? JSON.stringify(mastery) : null, status]
+    [sessionId, stage, progress, mastery ? JSON.stringify(mastery) : null, status, status === "completed"]
   );
   notifyTeacher("event", { sessionId, stage, eventType, correct, progress });
   res.json({ ok: true });
